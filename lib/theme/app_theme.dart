@@ -370,7 +370,7 @@ abstract class AppTheme {
   static NavigationBarThemeData _navigationBarTheme(ColorScheme scheme) {
     return NavigationBarThemeData(
       // Widget handles opacity + blur; set base color only.
-      backgroundColor: scheme.surfaceContainerHighest.withOpacity(0.70),
+      backgroundColor: scheme.surfaceContainerHighest.withValues(alpha: 0.70),
       indicatorColor: Colors.transparent,
       elevation: 0,
       shadowColor: Colors.transparent,
@@ -411,10 +411,10 @@ abstract class AppTheme {
       checkColor: WidgetStateProperty.all(scheme.onPrimary),
       overlayColor: WidgetStateProperty.resolveWith((states) {
         if (states.contains(WidgetState.pressed)) {
-          return scheme.primary.withOpacity(0.12);
+          return scheme.primary.withValues(alpha: 0.12);
         }
         if (states.contains(WidgetState.hovered)) {
-          return scheme.onSurface.withOpacity(0.08);
+          return scheme.onSurface.withValues(alpha: 0.08);
         }
         return Colors.transparent;
       }),
@@ -423,7 +423,7 @@ abstract class AppTheme {
           return BorderSide(color: scheme.primary, width: 2);
         }
         // Ghost Border: outline at 15% opacity
-        return BorderSide(color: scheme.outline.withOpacity(0.15), width: 2);
+        return BorderSide(color: scheme.outline.withValues(alpha: 0.15), width: 2);
       }),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
       splashRadius: 20,
@@ -535,7 +535,7 @@ abstract class AppTheme {
       backgroundColor: scheme.surfaceContainerLowest,
       surfaceTintColor: Colors.transparent,
       elevation: 0,
-      shadowColor: scheme.shadow.withOpacity(0.06),
+      shadowColor: scheme.shadow.withValues(alpha: 0.06),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
       titleTextStyle: GoogleFonts.manrope(
         fontSize: 22,
@@ -594,7 +594,7 @@ abstract class AppTheme {
       color: scheme.surfaceContainerLowest,
       surfaceTintColor: Colors.transparent,
       elevation: 0,
-      shadowColor: scheme.shadow.withOpacity(0.08),
+      shadowColor: scheme.shadow.withValues(alpha: 0.08),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       textStyle: GoogleFonts.inter(
         fontSize: 14,
@@ -617,7 +617,7 @@ abstract class AppTheme {
   static TooltipThemeData _tooltipTheme(ColorScheme scheme) {
     return TooltipThemeData(
       decoration: BoxDecoration(
-        color: scheme.inverseSurface.withOpacity(0.9),
+        color: scheme.inverseSurface.withValues(alpha: 0.9),
         borderRadius: BorderRadius.circular(8),
       ),
       textStyle: GoogleFonts.inter(
@@ -645,11 +645,11 @@ abstract class AppTheme {
       }),
       trackOutlineColor: WidgetStateProperty.resolveWith((states) {
         if (states.contains(WidgetState.selected)) return Colors.transparent;
-        return scheme.outline.withOpacity(0.15);
+        return scheme.outline.withValues(alpha: 0.15);
       }),
       overlayColor: WidgetStateProperty.resolveWith((states) {
         if (states.contains(WidgetState.pressed)) {
-          return scheme.primary.withOpacity(0.12);
+          return scheme.primary.withValues(alpha: 0.12);
         }
         return Colors.transparent;
       }),
@@ -664,11 +664,11 @@ abstract class AppTheme {
     return RadioThemeData(
       fillColor: WidgetStateProperty.resolveWith((states) {
         if (states.contains(WidgetState.selected)) return scheme.primary;
-        return scheme.outline.withOpacity(0.40);
+        return scheme.outline.withValues(alpha: 0.40);
       }),
       overlayColor: WidgetStateProperty.resolveWith((states) {
         if (states.contains(WidgetState.pressed)) {
-          return scheme.primary.withOpacity(0.12);
+          return scheme.primary.withValues(alpha: 0.12);
         }
         return Colors.transparent;
       }),

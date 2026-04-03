@@ -12,9 +12,22 @@ class MainShell extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final showFab = navigationShell.currentIndex < 2; // 메모·ToDo 탭에서만 표시
+
     return Scaffold(
       extendBody: true, // 바텀 네비 영역까지 body 확장 (blur 위해 필요)
+
       body: navigationShell,
+      // FAB 을 bottomNavigationBar 와 같은 Scaffold 에 두면
+      // Flutter 가 자동으로 네비바 위에 올바르게 배치한다.
+      floatingActionButton: showFab
+          ? FloatingActionButton(
+              onPressed: () {},
+              elevation: 0,
+              child: const Icon(Icons.add, size: 28),
+            )
+          : null,
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       bottomNavigationBar: _GlassNavBar(
         currentIndex: navigationShell.currentIndex,
         onTap: (index) => navigationShell.goBranch(
@@ -61,10 +74,7 @@ const _navItems = [
 // ── Glassmorphism bottom navigation bar ──────────────────────────────────────
 
 class _GlassNavBar extends ConsumerWidget {
-  const _GlassNavBar({
-    required this.currentIndex,
-    required this.onTap,
-  });
+  const _GlassNavBar({required this.currentIndex, required this.onTap});
 
   final int currentIndex;
   final ValueChanged<int> onTap;
@@ -131,10 +141,8 @@ class _NavTile extends ConsumerWidget {
           // Icon
           AnimatedSwitcher(
             duration: const Duration(milliseconds: 180),
-            transitionBuilder: (child, anim) => ScaleTransition(
-              scale: anim,
-              child: child,
-            ),
+            transitionBuilder: (child, anim) =>
+                ScaleTransition(scale: anim, child: child),
             child: Icon(
               isActive ? item.activeIcon : item.icon,
               key: ValueKey(isActive),

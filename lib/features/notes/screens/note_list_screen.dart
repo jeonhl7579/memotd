@@ -11,32 +11,8 @@ class NoteListScreen extends ConsumerWidget {
 
     return Scaffold(
       backgroundColor: cs.surface,
-      body: CustomScrollView(
-        slivers: [
-          SliverAppBar(
-            floating: true,
-            snap: true,
-            backgroundColor: cs.surface,
-            surfaceTintColor: Colors.transparent,
-            elevation: 0,
-            scrolledUnderElevation: 0,
-            title: Text(
-              '메모',
-              style: theme.textTheme.headlineSmall,
-            ),
-          ),
-          const SliverFillRemaining(
-            child: Center(
-              child: _EmptyNoteState(),
-            ),
-          ),
-        ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        elevation: 0,
-        child: const Icon(Icons.add, size: 28),
-      ),
+      appBar: AppBar(title: Text('메모', style: theme.textTheme.headlineSmall)),
+      body: const Center(child: _EmptyNoteState()),
     );
   }
 }
@@ -68,9 +44,7 @@ class _EmptyNoteState extends ConsumerWidget {
         const SizedBox(height: 20),
         Text(
           '아직 메모가 없어요',
-          style: theme.textTheme.titleMedium?.copyWith(
-            color: cs.onSurface,
-          ),
+          style: theme.textTheme.titleMedium?.copyWith(color: cs.onSurface),
         ),
         const SizedBox(height: 8),
         Text(

@@ -22,9 +22,8 @@ final GoRouter appRouter = GoRouter(
           routes: [
             GoRoute(
               path: '/notes',
-              pageBuilder: (context, state) => const NoTransitionPage(
-                child: NoteListScreen(),
-              ),
+              pageBuilder: (context, state) =>
+                  const NoTransitionPage(child: NoteListScreen()),
             ),
           ],
         ),
@@ -34,9 +33,8 @@ final GoRouter appRouter = GoRouter(
           routes: [
             GoRoute(
               path: '/todos',
-              pageBuilder: (context, state) => const NoTransitionPage(
-                child: TodoScreen(),
-              ),
+              pageBuilder: (context, state) =>
+                  const NoTransitionPage(child: TodoScreen()),
             ),
           ],
         ),
@@ -46,9 +44,8 @@ final GoRouter appRouter = GoRouter(
           routes: [
             GoRoute(
               path: '/mypage',
-              pageBuilder: (context, state) => const NoTransitionPage(
-                child: MypageScreen(),
-              ),
+              pageBuilder: (context, state) =>
+                  const NoTransitionPage(child: MypageScreen()),
             ),
           ],
         ),
@@ -57,10 +54,7 @@ final GoRouter appRouter = GoRouter(
   ],
   errorBuilder: (context, state) => Scaffold(
     body: Center(
-      child: Text(
-        '페이지를 찾을 수 없어요\n${state.error}',
-        textAlign: TextAlign.center,
-      ),
+      child: Text('페이지를 찾을 수 없어요\n${state.error}', textAlign: TextAlign.center),
     ),
   ),
 );

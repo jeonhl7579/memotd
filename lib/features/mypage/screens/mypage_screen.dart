@@ -11,27 +11,10 @@ class MypageScreen extends ConsumerWidget {
 
     return Scaffold(
       backgroundColor: cs.surface,
-      body: CustomScrollView(
-        slivers: [
-          SliverAppBar(
-            floating: true,
-            snap: true,
-            backgroundColor: cs.surface,
-            surfaceTintColor: Colors.transparent,
-            elevation: 0,
-            scrolledUnderElevation: 0,
-            title: Text(
-              '마이페이지',
-              style: theme.textTheme.headlineSmall,
-            ),
-          ),
-          const SliverFillRemaining(
-            child: Center(
-              child: _MypagePlaceholder(),
-            ),
-          ),
-        ],
+      appBar: AppBar(
+        title: Text('마이페이지', style: theme.textTheme.headlineSmall),
       ),
+      body: const Center(child: _MypagePlaceholder()),
     );
   }
 }

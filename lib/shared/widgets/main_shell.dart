@@ -11,6 +11,17 @@ class MainShell extends ConsumerWidget {
 
   final StatefulNavigationShell navigationShell;
 
+  void _onTap(BuildContext context, int index) {
+    if (index == 0) {
+      // 메모 작성 페이지로 이동
+      context.push('/notes/write');
+    } else if (index == 1) {
+      // ToDo 추가 페이지로 이동
+    } else {
+      // 비활성화 상태이므로 동작 없음
+    }
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final showFab = navigationShell.currentIndex < 2; // 메모·ToDo 탭에서만 표시
@@ -22,7 +33,9 @@ class MainShell extends ConsumerWidget {
       // FAB 을 bottomNavigationBar 와 같은 Scaffold 에 두면
       // Flutter 가 자동으로 네비바 위에 올바르게 배치한다.
       floatingActionButton: showFab
-          ? CustomFloatingButton(onPressed: () {})
+          ? CustomFloatingButton(
+              onPressed: () => _onTap(context, navigationShell.currentIndex),
+            )
           : null,
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       bottomNavigationBar: _GlassNavBar(

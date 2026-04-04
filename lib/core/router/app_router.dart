@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:memotd/features/notes/screens/note_write_screen.dart';
 import '../../features/notes/screens/note_list_screen.dart';
 import '../../features/todos/screens/todo_screen.dart';
 import '../../features/mypage/screens/mypage_screen.dart';
@@ -50,6 +51,11 @@ final GoRouter appRouter = GoRouter(
           ],
         ),
       ],
+    ),
+    GoRoute(
+      path: '/notes/write',
+      pageBuilder: (context, state) =>
+          const NoTransitionPage(child: NoteWriteScreen()),
     ),
   ],
   errorBuilder: (context, state) => Scaffold(

@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'custom_floating_button.dart';
 
 /// 앱 전체를 감싸는 Shell 위젯.
 /// StatefulShellRoute.indexedStack 의 builder 에서 주입받는다.
@@ -21,11 +22,7 @@ class MainShell extends ConsumerWidget {
       // FAB 을 bottomNavigationBar 와 같은 Scaffold 에 두면
       // Flutter 가 자동으로 네비바 위에 올바르게 배치한다.
       floatingActionButton: showFab
-          ? FloatingActionButton(
-              onPressed: () {},
-              elevation: 0,
-              child: const Icon(Icons.add, size: 28),
-            )
+          ? CustomFloatingButton(onPressed: () {})
           : null,
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       bottomNavigationBar: _GlassNavBar(
@@ -84,12 +81,26 @@ class _GlassNavBar extends ConsumerWidget {
     final cs = Theme.of(context).colorScheme;
     final bottomPadding = MediaQuery.of(context).padding.bottom;
 
-    return ClipRect(
+    return ClipRRect(
+      borderRadius: BorderRadius.only(
+        topLeft: Radius.circular(24),
+        topRight: Radius.circular(24),
+      ),
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
         child: Container(
           // surfaceContainerHighest @ 70% — "Glass & Gradient Rule"
-          color: cs.surfaceContainerHighest.withValues(alpha: 0.70),
+          decoration: BoxDecoration(
+            color: cs.onPrimary,
+            boxShadow: [
+              // 상단으로 약간의 그림자
+              BoxShadow(
+                color: cs.shadow.withValues(alpha: 1),
+                blurRadius: 12,
+                offset: const Offset(0, 0),
+              ),
+            ],
+          ),
           child: SafeArea(
             top: false,
             child: SizedBox(

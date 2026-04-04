@@ -12,7 +12,7 @@ class TodoScreen extends ConsumerWidget {
     return Scaffold(
       backgroundColor: cs.surface,
       appBar: AppBar(title: Text('ToDo', style: theme.textTheme.headlineSmall)),
-      body: const Center(child: _EmptyTodoState()),
+      body: SafeArea(child: const Center(child: _EmptyTodoState())),
     );
   }
 }

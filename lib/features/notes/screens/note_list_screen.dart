@@ -12,7 +12,7 @@ class NoteListScreen extends ConsumerWidget {
     return Scaffold(
       backgroundColor: cs.surface,
       appBar: AppBar(title: Text('메모', style: theme.textTheme.headlineSmall)),
-      body: const Center(child: _EmptyNoteState()),
+      body: SafeArea(child: const Center(child: _EmptyNoteState())),
     );
   }
 }
@@ -26,7 +26,8 @@ class _EmptyNoteState extends ConsumerWidget {
     final cs = theme.colorScheme;
 
     return Column(
-      mainAxisSize: MainAxisSize.min,
+      // mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Container(
           width: 80,

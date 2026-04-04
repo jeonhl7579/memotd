@@ -14,7 +14,7 @@ class MypageScreen extends ConsumerWidget {
       appBar: AppBar(
         title: Text('마이페이지', style: theme.textTheme.headlineSmall),
       ),
-      body: const Center(child: _MypagePlaceholder()),
+      body: SafeArea(child: const Center(child: _MypagePlaceholder())),
     );
   }
 }
@@ -46,9 +46,7 @@ class _MypagePlaceholder extends ConsumerWidget {
         const SizedBox(height: 20),
         Text(
           '마이페이지',
-          style: theme.textTheme.titleMedium?.copyWith(
-            color: cs.onSurface,
-          ),
+          style: theme.textTheme.titleMedium?.copyWith(color: cs.onSurface),
         ),
         const SizedBox(height: 8),
         Text(

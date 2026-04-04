@@ -128,7 +128,8 @@ abstract class AppTheme {
       // Components
       cardTheme: _cardTheme(scheme),
       chipTheme: _chipTheme(scheme),
-      floatingActionButtonTheme: _fabTheme(scheme),
+      // Floating Action Button 커스텀으로 인해 비활성화
+      // floatingActionButtonTheme: _fabTheme(scheme),
       navigationBarTheme: _navigationBarTheme(scheme),
       checkboxTheme: _checkboxTheme(scheme),
       inputDecorationTheme: _inputDecorationTheme(scheme),
@@ -347,19 +348,19 @@ abstract class AppTheme {
   // using a DecoratedBox + InkWell wrapper.
   // Ambient shadow: 0 12px 32px rgba(47,50,58,0.06).
 
-  static FloatingActionButtonThemeData _fabTheme(ColorScheme scheme) {
-    return FloatingActionButtonThemeData(
-      backgroundColor: scheme.primary,
-      foregroundColor: scheme.onPrimary,
-      elevation: 0,
-      focusElevation: 0,
-      hoverElevation: 0,
-      highlightElevation: 0,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-      extendedPadding: const EdgeInsets.symmetric(horizontal: 24),
-      iconSize: 24,
-    );
-  }
+  // static FloatingActionButtonThemeData _fabTheme(ColorScheme scheme) {
+  //   return FloatingActionButtonThemeData(
+  //     backgroundColor: scheme.primary.withValues(alpha: 0.8),
+  //     foregroundColor: scheme.onPrimary,
+  //     elevation: 1,
+  //     focusElevation: 0,
+  //     hoverElevation: 0,
+  //     highlightElevation: 0,
+  //     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+  //     extendedPadding: const EdgeInsets.symmetric(horizontal: 24),
+  //     iconSize: 24,
+  //   );
+  // }
 
   // ── Navigation Bar ────────────────────────────────────────────────────────
   //
@@ -423,7 +424,10 @@ abstract class AppTheme {
           return BorderSide(color: scheme.primary, width: 2);
         }
         // Ghost Border: outline at 15% opacity
-        return BorderSide(color: scheme.outline.withValues(alpha: 0.15), width: 2);
+        return BorderSide(
+          color: scheme.outline.withValues(alpha: 0.15),
+          width: 2,
+        );
       }),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
       splashRadius: 20,

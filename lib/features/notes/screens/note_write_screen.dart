@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:go_router/go_router.dart';
+import 'package:memotd/features/notes/widgets/add_tag_container.dart';
 import 'package:memotd/features/notes/widgets/save_note_button.dart';
+import 'package:memotd/features/notes/widgets/tag_added_list_field.dart';
+import 'package:memotd/features/notes/widgets/tag_container.dart';
 import 'package:memotd/features/notes/widgets/title_text_form_field.dart';
 import 'package:memotd/utils/sizes.dart';
 
@@ -50,7 +53,13 @@ class _NoteWriteScreenState extends State<NoteWriteScreen> {
               ),
               Gaps.v16,
               // 태그영역
-
+              // TagContainer(tag: "Tag", color: cs.tertiary),
+              // AddTagContainer(
+              //   tag: "ADD TAG",
+              //   color: cs.onSurfaceVariant,
+              //   onTap: () {},
+              // ),
+              TagAddedListField(tags: [], onFieldChanged: () {}),
               // 메모 영역
               Expanded(
                 child: ClipRRect(

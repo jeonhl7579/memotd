@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:go_router/go_router.dart';
 import 'package:memotd/features/notes/widgets/save_note_button.dart';
+import 'package:memotd/features/notes/widgets/title_text_form_field.dart';
+import 'package:memotd/utils/sizes.dart';
 
 class NoteWriteScreen extends StatefulWidget {
   const NoteWriteScreen({super.key});
@@ -14,6 +16,7 @@ class _NoteWriteScreenState extends State<NoteWriteScreen> {
   final QuillController _controller = QuillController.basic();
   final FocusNode _focusNode = FocusNode();
   final ScrollController _scrollController = ScrollController();
+  final TextEditingController _titleController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -34,32 +37,41 @@ class _NoteWriteScreenState extends State<NoteWriteScreen> {
       ),
       backgroundColor: cs.surface,
       body: SafeArea(
-        child: Column(
-          children: [
-            // 타이틀 영역
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 24),
+          child: Column(
+            children: [
+              // 타이틀 영역
+              Gaps.v16,
+              TitleTextFormField(
+                titleController: _titleController,
+                theme: theme,
+                cs: cs,
+              ),
+              Gaps.v16,
+              // 태그영역
 
-            // 태그영역
-            // 시간영역
-            // 메모 영역
-            Expanded(
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(24),
-                child: Container(
-                  margin: EdgeInsets.only(left: 24, right: 24, top: 24),
-                  decoration: BoxDecoration(
-                    color: cs.onPrimary,
-                    borderRadius: BorderRadius.circular(24),
-                  ),
-                  child: QuillEditor(
-                    config: QuillEditorConfig(padding: EdgeInsets.all(24)),
-                    focusNode: _focusNode,
-                    scrollController: _scrollController,
-                    controller: _controller,
+              // 메모 영역
+              Expanded(
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(24),
+                  child: Container(
+                    margin: EdgeInsets.only(top: 24),
+                    decoration: BoxDecoration(
+                      color: cs.onPrimary,
+                      borderRadius: BorderRadius.circular(24),
+                    ),
+                    child: QuillEditor(
+                      config: QuillEditorConfig(padding: EdgeInsets.all(24)),
+                      focusNode: _focusNode,
+                      scrollController: _scrollController,
+                      controller: _controller,
+                    ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

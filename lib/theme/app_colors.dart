@@ -46,6 +46,9 @@ abstract class AppColors {
   /// Muted / secondary text
   static const Color onSurfaceVariant = Color(0xFF5A5D6B);
 
+  /// Placeholder / hint text — very subtle (#dbd9e4)
+  static const Color hintText = Color(0xFFDBD9E4);
+
   // ── Outline ─────────────────────────────────────────────────────────────
   /// Ghost border base — must be used at ≤ 15% opacity
   static const Color outline = Color(0xFF8B8D9C);

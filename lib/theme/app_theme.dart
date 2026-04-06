@@ -466,7 +466,7 @@ abstract class AppTheme {
       hintStyle: GoogleFonts.inter(
         fontSize: 14,
         fontWeight: FontWeight.w400,
-        color: scheme.onSurfaceVariant,
+        color: AppColors.hintText,
       ),
       labelStyle: GoogleFonts.inter(
         fontSize: 14,

@@ -52,13 +52,7 @@ class _NoteWriteScreenState extends State<NoteWriteScreen> {
                 cs: cs,
               ),
               Gaps.v16,
-              // 태그영역
-              // TagContainer(tag: "Tag", color: cs.tertiary),
-              // AddTagContainer(
-              //   tag: "ADD TAG",
-              //   color: cs.onSurfaceVariant,
-              //   onTap: () {},
-              // ),
+              // 태그 영역
               TagAddedListField(tags: [], onFieldChanged: () {}),
               // 메모 영역
               Expanded(

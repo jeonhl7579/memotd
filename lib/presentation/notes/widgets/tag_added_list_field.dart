@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:memotd/features/notes/widgets/add_tag_container.dart';
-import 'package:memotd/features/notes/widgets/tag_container.dart';
+import 'package:memotd/presentation/notes/widgets/add_tag_container.dart';
+import 'package:memotd/presentation/notes/widgets/tag_container.dart';
 
 class TagAddedListField extends StatefulWidget {
   final List<String> tags;
@@ -32,7 +32,8 @@ class _TagAddedListFieldState extends State<TagAddedListField> {
   }
 
   void _startEditing() {
-    final needsScroll = _scrollController.hasClients &&
+    final needsScroll =
+        _scrollController.hasClients &&
         _scrollController.position.maxScrollExtent > 0;
     setState(() {
       _isEditing = true;
@@ -79,13 +80,13 @@ class _TagAddedListFieldState extends State<TagAddedListField> {
               curve: Curves.easeOut,
             )
             .then((_) {
-          if (mounted) {
-            setState(() {
-              _isEditing = false;
-              _needsScroll = false;
+              if (mounted) {
+                setState(() {
+                  _isEditing = false;
+                  _needsScroll = false;
+                });
+              }
             });
-          }
-        });
       });
     } else {
       setState(() {
@@ -151,10 +152,7 @@ class _TagAddedListFieldState extends State<TagAddedListField> {
             return Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                TagContainer(
-                  tag: entry.value,
-                  color: _tagColor(cs, entry.key),
-                ),
+                TagContainer(tag: entry.value, color: _tagColor(cs, entry.key)),
                 if (!isLast) const SizedBox(width: 6),
                 if (isLast && showTrailingGap && widget.tags.isNotEmpty)
                   const SizedBox(width: 6),
@@ -162,10 +160,7 @@ class _TagAddedListFieldState extends State<TagAddedListField> {
             );
           }),
           if (!_isEditing)
-            AddTagContainer(
-              color: cs.onSurfaceVariant,
-              onTap: _startEditing,
-            ),
+            AddTagContainer(color: cs.onSurfaceVariant, onTap: _startEditing),
           if (_isEditing && !_needsScroll) _buildTextField(cs),
         ],
       ),
@@ -197,9 +192,6 @@ class _TagAddedListFieldState extends State<TagAddedListField> {
     }
 
     // 기본/비스크롤 편집 모드: 좌측 정렬 스크롤 뷰
-    return Align(
-      alignment: Alignment.centerLeft,
-      child: _buildScrollView(cs),
-    );
+    return Align(alignment: Alignment.centerLeft, child: _buildScrollView(cs));
   }
 }

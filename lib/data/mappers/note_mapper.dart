@@ -9,7 +9,6 @@ extension NoteMapper on Note {
     id: id,
     title: title,
     content: content,
-    imgPath: imgPath,
     createdAt: createdAt,
     updatedAt: updatedAt,
   );
@@ -20,7 +19,6 @@ extension NoteModelMapper on NoteModel {
   NotesCompanion toCompanion() => NotesCompanion(
     title: Value(title),
     content: Value(content),
-    imgPath: Value(imgPath),
     createdAt: Value(createdAt),
     updatedAt: Value(updatedAt),
   );

@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$TagModel {
 
- int get id; String get name; String? get color;
+ int get id; String get name;
 /// Create a copy of TagModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $TagModelCopyWith<TagModel> get copyWith => _$TagModelCopyWithImpl<TagModel>(thi
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is TagModel&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.color, color) || other.color == color));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is TagModel&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,name,color);
+int get hashCode => Object.hash(runtimeType,id,name);
 
 @override
 String toString() {
-  return 'TagModel(id: $id, name: $name, color: $color)';
+  return 'TagModel(id: $id, name: $name)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $TagModelCopyWith<$Res>  {
   factory $TagModelCopyWith(TagModel value, $Res Function(TagModel) _then) = _$TagModelCopyWithImpl;
 @useResult
 $Res call({
- int id, String name, String? color
+ int id, String name
 });
 
 
@@ -62,12 +62,11 @@ class _$TagModelCopyWithImpl<$Res>
 
 /// Create a copy of TagModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? color = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
-as String,color: freezed == color ? _self.color : color // ignore: cast_nullable_to_non_nullable
-as String?,
+as String,
   ));
 }
 
@@ -152,10 +151,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  String name,  String? color)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  String name)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _TagModel() when $default != null:
-return $default(_that.id,_that.name,_that.color);case _:
+return $default(_that.id,_that.name);case _:
   return orElse();
 
 }
@@ -173,10 +172,10 @@ return $default(_that.id,_that.name,_that.color);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String name,  String? color)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String name)  $default,) {final _that = this;
 switch (_that) {
 case _TagModel():
-return $default(_that.id,_that.name,_that.color);case _:
+return $default(_that.id,_that.name);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -193,10 +192,10 @@ return $default(_that.id,_that.name,_that.color);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  String name,  String? color)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  String name)?  $default,) {final _that = this;
 switch (_that) {
 case _TagModel() when $default != null:
-return $default(_that.id,_that.name,_that.color);case _:
+return $default(_that.id,_that.name);case _:
   return null;
 
 }
@@ -208,12 +207,11 @@ return $default(_that.id,_that.name,_that.color);case _:
 
 
 class _TagModel implements TagModel {
-  const _TagModel({required this.id, required this.name, this.color});
+  const _TagModel({required this.id, required this.name});
   
 
 @override final  int id;
 @override final  String name;
-@override final  String? color;
 
 /// Create a copy of TagModel
 /// with the given fields replaced by the non-null parameter values.
@@ -225,16 +223,16 @@ _$TagModelCopyWith<_TagModel> get copyWith => __$TagModelCopyWithImpl<_TagModel>
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TagModel&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.color, color) || other.color == color));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TagModel&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,name,color);
+int get hashCode => Object.hash(runtimeType,id,name);
 
 @override
 String toString() {
-  return 'TagModel(id: $id, name: $name, color: $color)';
+  return 'TagModel(id: $id, name: $name)';
 }
 
 
@@ -245,7 +243,7 @@ abstract mixin class _$TagModelCopyWith<$Res> implements $TagModelCopyWith<$Res>
   factory _$TagModelCopyWith(_TagModel value, $Res Function(_TagModel) _then) = __$TagModelCopyWithImpl;
 @override @useResult
 $Res call({
- int id, String name, String? color
+ int id, String name
 });
 
 
@@ -262,12 +260,11 @@ class __$TagModelCopyWithImpl<$Res>
 
 /// Create a copy of TagModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? color = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,}) {
   return _then(_TagModel(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
-as String,color: freezed == color ? _self.color : color // ignore: cast_nullable_to_non_nullable
-as String?,
+as String,
   ));
 }
 

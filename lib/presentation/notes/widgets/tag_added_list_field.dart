@@ -4,7 +4,7 @@ import 'package:memotd/presentation/notes/widgets/tag_container.dart';
 
 class TagAddedListField extends StatefulWidget {
   final List<String> tags;
-  final void Function() onFieldChanged;
+  final void Function(List<String>) onFieldChanged;
 
   const TagAddedListField({
     super.key,
@@ -22,6 +22,13 @@ class _TagAddedListFieldState extends State<TagAddedListField> {
   final TextEditingController _tagController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
   final FocusNode _focusNode = FocusNode();
+  late List<String> _tags;
+
+  @override
+  void initState() {
+    super.initState();
+    _tags = widget.tags;
+  }
 
   // GlobalKey를 통해 부모가 변경되어도 동일 엘리먼트를 재사용 → 스크롤 포지션 보존
   final GlobalKey _scrollViewKey = GlobalKey();
@@ -57,9 +64,12 @@ class _TagAddedListFieldState extends State<TagAddedListField> {
       return;
     }
 
-    widget.tags.add(text);
+    if (!mounted) return;
+    setState(() {
+      _tags = [..._tags, text];
+    });
     _tagController.clear();
-    widget.onFieldChanged();
+    widget.onFieldChanged(_tags);
 
     if (_needsScroll) {
       // 편집 모드 유지 채로 새 태그 반영 후 애니메이션,

@@ -5,18 +5,21 @@ class TitleTextFormField extends StatelessWidget {
   final TextEditingController titleController;
   final ThemeData theme;
   final ColorScheme cs;
+  final void Function(String) onTitleChanged;
 
   const TitleTextFormField({
     super.key,
     required this.titleController,
     required this.theme,
     required this.cs,
+    required this.onTitleChanged,
   });
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
       controller: titleController,
+      onChanged: onTitleChanged,
       decoration: InputDecoration(
         hintText: "Untitled",
         border: InputBorder.none,

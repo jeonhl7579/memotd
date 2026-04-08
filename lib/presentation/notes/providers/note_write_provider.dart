@@ -20,8 +20,7 @@ class NoteWriteNotifier extends Notifier<NoteWriteState> {
     state = NoteWriteState(
       title: title ?? '',
       content: content,
-      imgPath: path,
-      tags: const [], // TODO: NoteRepository 생성 후 tag 이름 → TagModel 변환 추가
+      tags: [], // TODO: NoteRepository 생성 후 tag 이름 → TagModel 변환 추가
       isSaving: false,
     );
   }
@@ -34,19 +33,8 @@ class NoteWriteNotifier extends Notifier<NoteWriteState> {
     state = state.copyWith(content: content);
   }
 
-  void setImgPath(String? path) {
-    state = state.copyWith(imgPath: path);
-  }
-
-  void addTag(TagModel tag) {
-    if (state.tags.length >= 5) return;
-    state = state.copyWith(tags: [...state.tags, tag]);
-  }
-
-  void removeTag(int tagId) {
-    state = state.copyWith(
-      tags: state.tags.where((t) => t.id != tagId).toList(),
-    );
+  void setTags(List<String> tags) {
+    state = state.copyWith(tags: tags);
   }
 
   Future<void> saveNote() async {

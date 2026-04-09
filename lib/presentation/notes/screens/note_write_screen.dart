@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:go_router/go_router.dart';
-import 'package:memotd/presentation/notes/providers/note_write_provider.dart';
+import 'package:memotd/presentation/notes/providers/note_write/note_write_provider.dart';
 import 'package:memotd/presentation/notes/widgets/save_note_button.dart';
 import 'package:memotd/presentation/notes/widgets/tag_added_list_field.dart';
 import 'package:memotd/presentation/notes/widgets/title_text_form_field.dart';
@@ -41,13 +41,12 @@ class _NoteWriteScreenState extends ConsumerState<NoteWriteScreen> {
     });
   }
 
-  void _saveNote() {
-    // noteWriteProvider에 저장 로직
-    print({
-      "title": _titleController.text,
-      "content": _controller.document.toDelta(),
-      "tags": [],
-    });
+  void _saveNote() async {
+    print("저장 시작");
+    final result = await ref.read(noteWriteProvider.notifier).saveNote();
+    if (result == null) return;
+    // 저장 성공 시 메모 페이지로 이동
+    print("저장 성공: ${result.id}");
   }
 
   void _cancelNote() {
@@ -56,6 +55,13 @@ class _NoteWriteScreenState extends ConsumerState<NoteWriteScreen> {
 
   @override
   Widget build(BuildContext context) {
+    ref.listen(noteWriteProvider, (prev, next) {
+      if (next.hasError) {
+        // 에러 시 에러 메시지 다이얼로그 표시
+        // 사용자가 확인 버튼 누르면 초기화 상태로 변경
+      }
+    });
+
     final viewModel = ref.watch(noteWriteProvider);
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
@@ -84,7 +90,7 @@ class _NoteWriteScreenState extends ConsumerState<NoteWriteScreen> {
               Gaps.v16,
               // 태그 영역
               TagAddedListField(
-                tags: viewModel.tags,
+                tags: viewModel.asData?.value.tags ?? [],
                 onFieldChanged: ref.read(noteWriteProvider.notifier).setTags,
                 // 태그 삭제 기능 추가해야할듯
               ),

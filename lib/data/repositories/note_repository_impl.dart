@@ -22,21 +22,25 @@ class NoteRepositoryImpl implements NoteRepository {
 
   @override
   Future<NoteModel?> getNoteById(int id) async {
-    final row = await (_db.select(_db.notes)
-          ..where((t) => t.id.equals(id)))
-        .getSingleOrNull();
+    final row = await (_db.select(
+      _db.notes,
+    )..where((t) => t.id.equals(id))).getSingleOrNull();
     return row?.toModel();
   }
 
   @override
-  Future<void> createNote(NoteModel note) async {
-    await _db.into(_db.notes).insert(note.toCompanion());
+  Future<NoteModel> createNote(NoteModel note) async {
+    // insert 함수는 생성된 데이터의 id를 반환
+    final id = await _db.into(_db.notes).insert(note.toCompanion());
+    return note.copyWith(id: id);
   }
 
   @override
   Future<void> updateNote(NoteModel note) async {
-    await (_db.update(_db.notes)..where((t) => t.id.equals(note.id)))
-        .write(note.toCompanion());
+    if (note.id == null) return;
+    await (_db.update(
+      _db.notes,
+    )..where((t) => t.id.equals(note.id!))).write(note.toCompanion());
   }
 
   @override

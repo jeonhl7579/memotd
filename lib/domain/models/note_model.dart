@@ -5,11 +5,11 @@ part 'note_model.freezed.dart';
 @freezed
 abstract class NoteModel with _$NoteModel {
   const factory NoteModel({
-    required int id,
+    int? id,
     required String title,
     String? content,
     required DateTime createdAt,
-    required DateTime updatedAt,
+    DateTime? updatedAt,
     @Default(false) bool isHidden, // 숨김 속성 추가
   }) = _NoteModel;
 }

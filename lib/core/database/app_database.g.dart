@@ -70,9 +70,9 @@ class $NotesTable extends Notes with TableInfo<$NotesTable, Note> {
   late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
     'updated_at',
     aliasedName,
-    false,
+    true,
     type: DriftSqlType.dateTime,
-    requiredDuringInsert: true,
+    requiredDuringInsert: false,
   );
   @override
   List<GeneratedColumn> get $columns => [
@@ -131,8 +131,6 @@ class $NotesTable extends Notes with TableInfo<$NotesTable, Note> {
         _updatedAtMeta,
         updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
       );
-    } else if (isInserting) {
-      context.missing(_updatedAtMeta);
     }
     return context;
   }
@@ -166,7 +164,7 @@ class $NotesTable extends Notes with TableInfo<$NotesTable, Note> {
       updatedAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}updated_at'],
-      )!,
+      ),
     );
   }
 
@@ -182,14 +180,14 @@ class Note extends DataClass implements Insertable<Note> {
   final String? content;
   final String? imgPath;
   final DateTime createdAt;
-  final DateTime updatedAt;
+  final DateTime? updatedAt;
   const Note({
     required this.id,
     required this.title,
     this.content,
     this.imgPath,
     required this.createdAt,
-    required this.updatedAt,
+    this.updatedAt,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -203,7 +201,9 @@ class Note extends DataClass implements Insertable<Note> {
       map['img_path'] = Variable<String>(imgPath);
     }
     map['created_at'] = Variable<DateTime>(createdAt);
-    map['updated_at'] = Variable<DateTime>(updatedAt);
+    if (!nullToAbsent || updatedAt != null) {
+      map['updated_at'] = Variable<DateTime>(updatedAt);
+    }
     return map;
   }
 
@@ -218,7 +218,9 @@ class Note extends DataClass implements Insertable<Note> {
           ? const Value.absent()
           : Value(imgPath),
       createdAt: Value(createdAt),
-      updatedAt: Value(updatedAt),
+      updatedAt: updatedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(updatedAt),
     );
   }
 
@@ -233,7 +235,7 @@ class Note extends DataClass implements Insertable<Note> {
       content: serializer.fromJson<String?>(json['content']),
       imgPath: serializer.fromJson<String?>(json['imgPath']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
-      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+      updatedAt: serializer.fromJson<DateTime?>(json['updatedAt']),
     );
   }
   @override
@@ -245,7 +247,7 @@ class Note extends DataClass implements Insertable<Note> {
       'content': serializer.toJson<String?>(content),
       'imgPath': serializer.toJson<String?>(imgPath),
       'createdAt': serializer.toJson<DateTime>(createdAt),
-      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+      'updatedAt': serializer.toJson<DateTime?>(updatedAt),
     };
   }
 
@@ -255,14 +257,14 @@ class Note extends DataClass implements Insertable<Note> {
     Value<String?> content = const Value.absent(),
     Value<String?> imgPath = const Value.absent(),
     DateTime? createdAt,
-    DateTime? updatedAt,
+    Value<DateTime?> updatedAt = const Value.absent(),
   }) => Note(
     id: id ?? this.id,
     title: title ?? this.title,
     content: content.present ? content.value : this.content,
     imgPath: imgPath.present ? imgPath.value : this.imgPath,
     createdAt: createdAt ?? this.createdAt,
-    updatedAt: updatedAt ?? this.updatedAt,
+    updatedAt: updatedAt.present ? updatedAt.value : this.updatedAt,
   );
   Note copyWithCompanion(NotesCompanion data) {
     return Note(
@@ -309,7 +311,7 @@ class NotesCompanion extends UpdateCompanion<Note> {
   final Value<String?> content;
   final Value<String?> imgPath;
   final Value<DateTime> createdAt;
-  final Value<DateTime> updatedAt;
+  final Value<DateTime?> updatedAt;
   const NotesCompanion({
     this.id = const Value.absent(),
     this.title = const Value.absent(),
@@ -324,10 +326,9 @@ class NotesCompanion extends UpdateCompanion<Note> {
     this.content = const Value.absent(),
     this.imgPath = const Value.absent(),
     required DateTime createdAt,
-    required DateTime updatedAt,
+    this.updatedAt = const Value.absent(),
   }) : title = Value(title),
-       createdAt = Value(createdAt),
-       updatedAt = Value(updatedAt);
+       createdAt = Value(createdAt);
   static Insertable<Note> custom({
     Expression<int>? id,
     Expression<String>? title,
@@ -352,7 +353,7 @@ class NotesCompanion extends UpdateCompanion<Note> {
     Value<String?>? content,
     Value<String?>? imgPath,
     Value<DateTime>? createdAt,
-    Value<DateTime>? updatedAt,
+    Value<DateTime?>? updatedAt,
   }) {
     return NotesCompanion(
       id: id ?? this.id,
@@ -837,7 +838,7 @@ typedef $$NotesTableCreateCompanionBuilder =
       Value<String?> content,
       Value<String?> imgPath,
       required DateTime createdAt,
-      required DateTime updatedAt,
+      Value<DateTime?> updatedAt,
     });
 typedef $$NotesTableUpdateCompanionBuilder =
     NotesCompanion Function({
@@ -846,7 +847,7 @@ typedef $$NotesTableUpdateCompanionBuilder =
       Value<String?> content,
       Value<String?> imgPath,
       Value<DateTime> createdAt,
-      Value<DateTime> updatedAt,
+      Value<DateTime?> updatedAt,
     });
 
 final class $$NotesTableReferences
@@ -1063,7 +1064,7 @@ class $$NotesTableTableManager
                 Value<String?> content = const Value.absent(),
                 Value<String?> imgPath = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
-                Value<DateTime> updatedAt = const Value.absent(),
+                Value<DateTime?> updatedAt = const Value.absent(),
               }) => NotesCompanion(
                 id: id,
                 title: title,
@@ -1079,7 +1080,7 @@ class $$NotesTableTableManager
                 Value<String?> content = const Value.absent(),
                 Value<String?> imgPath = const Value.absent(),
                 required DateTime createdAt,
-                required DateTime updatedAt,
+                Value<DateTime?> updatedAt = const Value.absent(),
               }) => NotesCompanion.insert(
                 id: id,
                 title: title,

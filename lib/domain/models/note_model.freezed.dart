@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$NoteModel {
 
- int get id; String get title; String? get content; DateTime get createdAt; DateTime get updatedAt; bool get isHidden;
+ int? get id; String get title; String? get content; DateTime get createdAt; DateTime? get updatedAt; bool get isHidden;
 /// Create a copy of NoteModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -45,7 +45,7 @@ abstract mixin class $NoteModelCopyWith<$Res>  {
   factory $NoteModelCopyWith(NoteModel value, $Res Function(NoteModel) _then) = _$NoteModelCopyWithImpl;
 @useResult
 $Res call({
- int id, String title, String? content, DateTime createdAt, DateTime updatedAt, bool isHidden
+ int? id, String title, String? content, DateTime createdAt, DateTime? updatedAt, bool isHidden
 });
 
 
@@ -62,14 +62,14 @@ class _$NoteModelCopyWithImpl<$Res>
 
 /// Create a copy of NoteModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? title = null,Object? content = freezed,Object? createdAt = null,Object? updatedAt = null,Object? isHidden = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? title = null,Object? content = freezed,Object? createdAt = null,Object? updatedAt = freezed,Object? isHidden = null,}) {
   return _then(_self.copyWith(
-id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as int,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
+id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as int?,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,content: freezed == content ? _self.content : content // ignore: cast_nullable_to_non_nullable
 as String?,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
-as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
-as DateTime,isHidden: null == isHidden ? _self.isHidden : isHidden // ignore: cast_nullable_to_non_nullable
+as DateTime,updatedAt: freezed == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,isHidden: null == isHidden ? _self.isHidden : isHidden // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
 }
@@ -155,7 +155,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  String title,  String? content,  DateTime createdAt,  DateTime updatedAt,  bool isHidden)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int? id,  String title,  String? content,  DateTime createdAt,  DateTime? updatedAt,  bool isHidden)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _NoteModel() when $default != null:
 return $default(_that.id,_that.title,_that.content,_that.createdAt,_that.updatedAt,_that.isHidden);case _:
@@ -176,7 +176,7 @@ return $default(_that.id,_that.title,_that.content,_that.createdAt,_that.updated
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String title,  String? content,  DateTime createdAt,  DateTime updatedAt,  bool isHidden)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int? id,  String title,  String? content,  DateTime createdAt,  DateTime? updatedAt,  bool isHidden)  $default,) {final _that = this;
 switch (_that) {
 case _NoteModel():
 return $default(_that.id,_that.title,_that.content,_that.createdAt,_that.updatedAt,_that.isHidden);case _:
@@ -196,7 +196,7 @@ return $default(_that.id,_that.title,_that.content,_that.createdAt,_that.updated
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  String title,  String? content,  DateTime createdAt,  DateTime updatedAt,  bool isHidden)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int? id,  String title,  String? content,  DateTime createdAt,  DateTime? updatedAt,  bool isHidden)?  $default,) {final _that = this;
 switch (_that) {
 case _NoteModel() when $default != null:
 return $default(_that.id,_that.title,_that.content,_that.createdAt,_that.updatedAt,_that.isHidden);case _:
@@ -211,14 +211,14 @@ return $default(_that.id,_that.title,_that.content,_that.createdAt,_that.updated
 
 
 class _NoteModel implements NoteModel {
-  const _NoteModel({required this.id, required this.title, this.content, required this.createdAt, required this.updatedAt, this.isHidden = false});
+  const _NoteModel({this.id, required this.title, this.content, required this.createdAt, this.updatedAt, this.isHidden = false});
   
 
-@override final  int id;
+@override final  int? id;
 @override final  String title;
 @override final  String? content;
 @override final  DateTime createdAt;
-@override final  DateTime updatedAt;
+@override final  DateTime? updatedAt;
 @override@JsonKey() final  bool isHidden;
 
 /// Create a copy of NoteModel
@@ -251,7 +251,7 @@ abstract mixin class _$NoteModelCopyWith<$Res> implements $NoteModelCopyWith<$Re
   factory _$NoteModelCopyWith(_NoteModel value, $Res Function(_NoteModel) _then) = __$NoteModelCopyWithImpl;
 @override @useResult
 $Res call({
- int id, String title, String? content, DateTime createdAt, DateTime updatedAt, bool isHidden
+ int? id, String title, String? content, DateTime createdAt, DateTime? updatedAt, bool isHidden
 });
 
 
@@ -268,14 +268,14 @@ class __$NoteModelCopyWithImpl<$Res>
 
 /// Create a copy of NoteModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? title = null,Object? content = freezed,Object? createdAt = null,Object? updatedAt = null,Object? isHidden = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? title = null,Object? content = freezed,Object? createdAt = null,Object? updatedAt = freezed,Object? isHidden = null,}) {
   return _then(_NoteModel(
-id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as int,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
+id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as int?,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,content: freezed == content ? _self.content : content // ignore: cast_nullable_to_non_nullable
 as String?,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
-as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
-as DateTime,isHidden: null == isHidden ? _self.isHidden : isHidden // ignore: cast_nullable_to_non_nullable
+as DateTime,updatedAt: freezed == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,isHidden: null == isHidden ? _self.isHidden : isHidden // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
 }

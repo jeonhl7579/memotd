@@ -20,6 +20,6 @@ extension NoteModelMapper on NoteModel {
     title: Value(title),
     content: Value(content),
     createdAt: Value(createdAt),
-    updatedAt: Value(updatedAt),
+    updatedAt: updatedAt == null ? const Value.absent() : Value(updatedAt!),
   );
 }

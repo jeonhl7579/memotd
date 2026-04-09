@@ -6,5 +6,5 @@ class Notes extends Table {
   TextColumn get content => text().nullable()();
   TextColumn get imgPath => text().nullable()();
   DateTimeColumn get createdAt => dateTime()();
-  DateTimeColumn get updatedAt => dateTime()();
+  DateTimeColumn get updatedAt => dateTime().nullable()();
 }

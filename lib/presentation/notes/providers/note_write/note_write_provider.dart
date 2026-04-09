@@ -58,13 +58,13 @@ class NoteWriteNotifier extends AsyncNotifier<NoteWriteState> {
       );
 
       final NoteModel savedNote = await repository.createNote(note);
-      state = AsyncValue.data(currentState.copyWith(isSaving: false));
+
       return savedNote;
     } catch (e, st) {
       print("저장 실패: $e");
       print("스택 트레이스: $st");
-      state = AsyncValue.error(e, st);
-      return null;
+      state = AsyncValue.data(currentState.copyWith(isSaving: false));
+      Error.throwWithStackTrace("테스트 에러", StackTrace.current);
     }
   }
 }

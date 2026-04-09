@@ -7,6 +7,7 @@ import 'package:memotd/presentation/notes/providers/note_write/note_write_provid
 import 'package:memotd/presentation/notes/widgets/save_note_button.dart';
 import 'package:memotd/presentation/notes/widgets/tag_added_list_field.dart';
 import 'package:memotd/presentation/notes/widgets/title_text_form_field.dart';
+import 'package:memotd/shared/widgets/app_dialog.dart';
 import 'package:memotd/utils/sizes.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -42,11 +43,22 @@ class _NoteWriteScreenState extends ConsumerState<NoteWriteScreen> {
   }
 
   void _saveNote() async {
-    print("저장 시작");
-    final result = await ref.read(noteWriteProvider.notifier).saveNote();
-    if (result == null) return;
-    // 저장 성공 시 메모 페이지로 이동
-    print("저장 성공: ${result.id}");
+    try {
+      print("저장 시작");
+      final result = await ref.read(noteWriteProvider.notifier).saveNote();
+      if (result == null) return;
+      // 저장 성공 시 메모 페이지로 이동
+      print("저장 성공: ${result.id}");
+    } catch (e, _) {
+      // 저장 시도 중 에러 발생 시 에러 메시지 다이얼로그 표시
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
+        await AppDialog.error(
+          context: context,
+          msg: "메모를 저장하는 중에 문제가 발생했습니다.\n다시 시도해주세요",
+          confirmText: "확인",
+        );
+      });
+    }
   }
 
   void _cancelNote() {
@@ -55,13 +67,6 @@ class _NoteWriteScreenState extends ConsumerState<NoteWriteScreen> {
 
   @override
   Widget build(BuildContext context) {
-    ref.listen(noteWriteProvider, (prev, next) {
-      if (next.hasError) {
-        // 에러 시 에러 메시지 다이얼로그 표시
-        // 사용자가 확인 버튼 누르면 초기화 상태로 변경
-      }
-    });
-
     final viewModel = ref.watch(noteWriteProvider);
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
@@ -74,48 +79,69 @@ class _NoteWriteScreenState extends ConsumerState<NoteWriteScreen> {
         onCancelPressed: _cancelNote,
       ),
       backgroundColor: cs.surface,
-      body: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 24),
-          child: Column(
-            children: [
-              // 타이틀 영역
-              Gaps.v16,
-              TitleTextFormField(
-                titleController: _titleController,
-                theme: theme,
-                cs: cs,
-                onTitleChanged: ref.read(noteWriteProvider.notifier).setTitle,
-              ),
-              Gaps.v16,
-              // 태그 영역
-              TagAddedListField(
-                tags: viewModel.asData?.value.tags ?? [],
-                onFieldChanged: ref.read(noteWriteProvider.notifier).setTags,
-                // 태그 삭제 기능 추가해야할듯
-              ),
-              // 메모 영역
-              Expanded(
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(24),
-                  child: Container(
-                    margin: EdgeInsets.only(top: 24),
-                    decoration: BoxDecoration(
-                      color: cs.onPrimary,
+      body: Stack(
+        children: [
+          SafeArea(
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 24),
+              child: Column(
+                children: [
+                  // 타이틀 영역
+                  Gaps.v16,
+                  TitleTextFormField(
+                    titleController: _titleController,
+                    theme: theme,
+                    cs: cs,
+                    onTitleChanged: ref
+                        .read(noteWriteProvider.notifier)
+                        .setTitle,
+                  ),
+                  Gaps.v16,
+                  // 태그 영역
+                  TagAddedListField(
+                    tags: viewModel.asData?.value.tags ?? [],
+                    onFieldChanged: ref
+                        .read(noteWriteProvider.notifier)
+                        .setTags,
+                    // 태그 삭제 기능 추가해야할듯
+                  ),
+                  // 메모 영역
+                  Expanded(
+                    child: ClipRRect(
                       borderRadius: BorderRadius.circular(24),
-                    ),
-                    child: QuillEditor(
-                      config: QuillEditorConfig(padding: EdgeInsets.all(24)),
-                      focusNode: _focusNode,
-                      scrollController: _scrollController,
-                      controller: _controller,
+                      child: Container(
+                        margin: EdgeInsets.only(top: 24),
+                        decoration: BoxDecoration(
+                          color: cs.onPrimary,
+                          borderRadius: BorderRadius.circular(24),
+                        ),
+                        child: QuillEditor(
+                          config: QuillEditorConfig(
+                            padding: EdgeInsets.all(24),
+                          ),
+                          focusNode: _focusNode,
+                          scrollController: _scrollController,
+                          controller: _controller,
+                        ),
+                      ),
                     ),
                   ),
-                ),
+                ],
               ),
-            ],
+            ),
           ),
-        ),
+          if (viewModel.asData?.value.isSaving ?? false)
+            Container(
+              width: double.infinity,
+              height: double.infinity,
+              decoration: BoxDecoration(
+                color: Colors.black.withValues(alpha: 0.18),
+              ),
+              child: Center(
+                child: CircularProgressIndicator(color: cs.primary),
+              ),
+            ),
+        ],
       ),
     );
   }

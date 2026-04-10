@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:memotd/presentation/notes/widgets/search_field.dart';
+import 'package:memotd/utils/sizes.dart';
 
 class NoteListScreen extends ConsumerWidget {
   const NoteListScreen({super.key});
@@ -12,7 +14,21 @@ class NoteListScreen extends ConsumerWidget {
     return Scaffold(
       backgroundColor: cs.surface,
       appBar: AppBar(title: Text('메모', style: theme.textTheme.headlineSmall)),
-      body: SafeArea(child: const Center(child: _EmptyNoteState())),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Column(
+            children: [
+              Gaps.v16,
+              NoteSearchField(
+                controller: TextEditingController(),
+                onChanged: (value) {},
+                onSubmitted: (value) {},
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

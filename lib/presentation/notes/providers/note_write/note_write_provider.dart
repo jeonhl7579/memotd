@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:memotd/data/repositories/note_repository_impl.dart';
+import 'package:memotd/data/repositories/note_write_repository_impl.dart';
 import 'package:memotd/domain/models/note_model.dart';
 import 'package:memotd/presentation/notes/providers/note_write/note_write_state.dart';
 
@@ -49,7 +49,7 @@ class NoteWriteNotifier extends AsyncNotifier<NoteWriteState> {
 
     state = AsyncValue.data(currentState.copyWith(isSaving: true));
     try {
-      final repository = ref.read(noteRepositoryProvider);
+      final repository = ref.read(noteWriteRepositoryProvider);
 
       final note = NoteModel(
         title: currentState.title,

@@ -3,14 +3,14 @@ import 'package:memotd/core/database/app_database.dart';
 import 'package:memotd/core/providers/app_database_provider.dart';
 import 'package:memotd/data/mappers/note_mapper.dart';
 import 'package:memotd/domain/models/note_model.dart';
-import 'package:memotd/domain/repositories/note_repository.dart';
+import 'package:memotd/domain/repositories/note_write_repository.dart';
 
-final noteRepositoryProvider = Provider<NoteRepository>(
-  (ref) => NoteRepositoryImpl(ref.watch(appDatabaseProvider)),
+final noteWriteRepositoryProvider = Provider<NoteWriteRepository>(
+  (ref) => NoteWriteRepositoryImpl(ref.watch(appDatabaseProvider)),
 );
 
-class NoteRepositoryImpl implements NoteRepository {
-  const NoteRepositoryImpl(this._db);
+class NoteWriteRepositoryImpl implements NoteWriteRepository {
+  const NoteWriteRepositoryImpl(this._db);
 
   final AppDatabase _db;
 

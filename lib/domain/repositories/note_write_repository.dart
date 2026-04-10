@@ -1,6 +1,6 @@
 import 'package:memotd/domain/models/note_model.dart';
 
-abstract class NoteRepository {
+abstract class NoteWriteRepository {
   Future<List<NoteModel>> getNotes();
   Future<NoteModel?> getNoteById(int id);
   Future<NoteModel> createNote(NoteModel note);

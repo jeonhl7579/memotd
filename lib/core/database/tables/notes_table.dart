@@ -7,4 +7,5 @@ class Notes extends Table {
   TextColumn get imgPath => text().nullable()();
   DateTimeColumn get createdAt => dateTime()();
   DateTimeColumn get updatedAt => dateTime().nullable()();
+  BoolColumn get isFavorite => boolean().withDefault(const Constant(false))();
 }

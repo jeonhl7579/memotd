@@ -11,5 +11,6 @@ abstract class NoteModel with _$NoteModel {
     required DateTime createdAt,
     DateTime? updatedAt,
     @Default(false) bool isHidden, // 숨김 속성 추가
+    @Default(false) bool isFavorite,
   }) = _NoteModel;
 }

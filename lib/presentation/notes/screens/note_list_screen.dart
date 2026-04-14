@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:memotd/presentation/notes/widgets/note_grid_view_item.dart';
 import 'package:memotd/presentation/notes/widgets/search_field.dart';
+import 'package:memotd/presentation/notes/widgets/tag_selected_field.dart';
 import 'package:memotd/utils/sizes.dart';
+
+final tags = ["#태그1", "#태그2", "#태그3", "#태그4"];
+
+final isTagSelectedList = [true, false, false, false];
 
 class NoteListScreen extends ConsumerWidget {
   const NoteListScreen({super.key});
@@ -25,6 +31,16 @@ class NoteListScreen extends ConsumerWidget {
                 onChanged: (value) {},
                 onSubmitted: (value) {},
               ),
+              Gaps.v16,
+              // 태그 필드
+              TagSelectedField(
+                tags: tags,
+                isTagSelectedList: isTagSelectedList,
+                onTagSelected: (index) {},
+                cs: cs,
+              ),
+              Gaps.v16,
+              NoteGridViewItem(color: cs.onPrimary),
             ],
           ),
         ),

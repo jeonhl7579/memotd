@@ -11,6 +11,7 @@ extension NoteMapper on Note {
     content: content,
     createdAt: createdAt,
     updatedAt: updatedAt,
+    isFavorite: isFavorite,
   );
 }
 
@@ -21,5 +22,6 @@ extension NoteModelMapper on NoteModel {
     content: Value(content),
     createdAt: Value(createdAt),
     updatedAt: updatedAt == null ? const Value.absent() : Value(updatedAt!),
+    isFavorite: Value(isFavorite),
   );
 }

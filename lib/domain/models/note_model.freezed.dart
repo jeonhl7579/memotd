@@ -14,7 +14,8 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$NoteModel {
 
- int? get id; String get title; String? get content; DateTime get createdAt; DateTime? get updatedAt; bool get isHidden;
+ int? get id; String get title; String? get content; DateTime get createdAt; DateTime? get updatedAt; bool get isHidden;// 숨김 속성 추가
+ bool get isFavorite;
 /// Create a copy of NoteModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +26,16 @@ $NoteModelCopyWith<NoteModel> get copyWith => _$NoteModelCopyWithImpl<NoteModel>
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is NoteModel&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.content, content) || other.content == content)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.isHidden, isHidden) || other.isHidden == isHidden));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is NoteModel&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.content, content) || other.content == content)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.isHidden, isHidden) || other.isHidden == isHidden)&&(identical(other.isFavorite, isFavorite) || other.isFavorite == isFavorite));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,title,content,createdAt,updatedAt,isHidden);
+int get hashCode => Object.hash(runtimeType,id,title,content,createdAt,updatedAt,isHidden,isFavorite);
 
 @override
 String toString() {
-  return 'NoteModel(id: $id, title: $title, content: $content, createdAt: $createdAt, updatedAt: $updatedAt, isHidden: $isHidden)';
+  return 'NoteModel(id: $id, title: $title, content: $content, createdAt: $createdAt, updatedAt: $updatedAt, isHidden: $isHidden, isFavorite: $isFavorite)';
 }
 
 
@@ -45,7 +46,7 @@ abstract mixin class $NoteModelCopyWith<$Res>  {
   factory $NoteModelCopyWith(NoteModel value, $Res Function(NoteModel) _then) = _$NoteModelCopyWithImpl;
 @useResult
 $Res call({
- int? id, String title, String? content, DateTime createdAt, DateTime? updatedAt, bool isHidden
+ int? id, String title, String? content, DateTime createdAt, DateTime? updatedAt, bool isHidden, bool isFavorite
 });
 
 
@@ -62,7 +63,7 @@ class _$NoteModelCopyWithImpl<$Res>
 
 /// Create a copy of NoteModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? title = null,Object? content = freezed,Object? createdAt = null,Object? updatedAt = freezed,Object? isHidden = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? title = null,Object? content = freezed,Object? createdAt = null,Object? updatedAt = freezed,Object? isHidden = null,Object? isFavorite = null,}) {
   return _then(_self.copyWith(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int?,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
@@ -70,6 +71,7 @@ as String,content: freezed == content ? _self.content : content // ignore: cast_
 as String?,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,updatedAt: freezed == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,isHidden: null == isHidden ? _self.isHidden : isHidden // ignore: cast_nullable_to_non_nullable
+as bool,isFavorite: null == isFavorite ? _self.isFavorite : isFavorite // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
 }
@@ -155,10 +157,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int? id,  String title,  String? content,  DateTime createdAt,  DateTime? updatedAt,  bool isHidden)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int? id,  String title,  String? content,  DateTime createdAt,  DateTime? updatedAt,  bool isHidden,  bool isFavorite)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _NoteModel() when $default != null:
-return $default(_that.id,_that.title,_that.content,_that.createdAt,_that.updatedAt,_that.isHidden);case _:
+return $default(_that.id,_that.title,_that.content,_that.createdAt,_that.updatedAt,_that.isHidden,_that.isFavorite);case _:
   return orElse();
 
 }
@@ -176,10 +178,10 @@ return $default(_that.id,_that.title,_that.content,_that.createdAt,_that.updated
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int? id,  String title,  String? content,  DateTime createdAt,  DateTime? updatedAt,  bool isHidden)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int? id,  String title,  String? content,  DateTime createdAt,  DateTime? updatedAt,  bool isHidden,  bool isFavorite)  $default,) {final _that = this;
 switch (_that) {
 case _NoteModel():
-return $default(_that.id,_that.title,_that.content,_that.createdAt,_that.updatedAt,_that.isHidden);case _:
+return $default(_that.id,_that.title,_that.content,_that.createdAt,_that.updatedAt,_that.isHidden,_that.isFavorite);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -196,10 +198,10 @@ return $default(_that.id,_that.title,_that.content,_that.createdAt,_that.updated
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int? id,  String title,  String? content,  DateTime createdAt,  DateTime? updatedAt,  bool isHidden)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int? id,  String title,  String? content,  DateTime createdAt,  DateTime? updatedAt,  bool isHidden,  bool isFavorite)?  $default,) {final _that = this;
 switch (_that) {
 case _NoteModel() when $default != null:
-return $default(_that.id,_that.title,_that.content,_that.createdAt,_that.updatedAt,_that.isHidden);case _:
+return $default(_that.id,_that.title,_that.content,_that.createdAt,_that.updatedAt,_that.isHidden,_that.isFavorite);case _:
   return null;
 
 }
@@ -211,7 +213,7 @@ return $default(_that.id,_that.title,_that.content,_that.createdAt,_that.updated
 
 
 class _NoteModel implements NoteModel {
-  const _NoteModel({this.id, required this.title, this.content, required this.createdAt, this.updatedAt, this.isHidden = false});
+  const _NoteModel({this.id, required this.title, this.content, required this.createdAt, this.updatedAt, this.isHidden = false, this.isFavorite = false});
   
 
 @override final  int? id;
@@ -220,6 +222,8 @@ class _NoteModel implements NoteModel {
 @override final  DateTime createdAt;
 @override final  DateTime? updatedAt;
 @override@JsonKey() final  bool isHidden;
+// 숨김 속성 추가
+@override@JsonKey() final  bool isFavorite;
 
 /// Create a copy of NoteModel
 /// with the given fields replaced by the non-null parameter values.
@@ -231,16 +235,16 @@ _$NoteModelCopyWith<_NoteModel> get copyWith => __$NoteModelCopyWithImpl<_NoteMo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _NoteModel&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.content, content) || other.content == content)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.isHidden, isHidden) || other.isHidden == isHidden));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _NoteModel&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.content, content) || other.content == content)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.isHidden, isHidden) || other.isHidden == isHidden)&&(identical(other.isFavorite, isFavorite) || other.isFavorite == isFavorite));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,title,content,createdAt,updatedAt,isHidden);
+int get hashCode => Object.hash(runtimeType,id,title,content,createdAt,updatedAt,isHidden,isFavorite);
 
 @override
 String toString() {
-  return 'NoteModel(id: $id, title: $title, content: $content, createdAt: $createdAt, updatedAt: $updatedAt, isHidden: $isHidden)';
+  return 'NoteModel(id: $id, title: $title, content: $content, createdAt: $createdAt, updatedAt: $updatedAt, isHidden: $isHidden, isFavorite: $isFavorite)';
 }
 
 
@@ -251,7 +255,7 @@ abstract mixin class _$NoteModelCopyWith<$Res> implements $NoteModelCopyWith<$Re
   factory _$NoteModelCopyWith(_NoteModel value, $Res Function(_NoteModel) _then) = __$NoteModelCopyWithImpl;
 @override @useResult
 $Res call({
- int? id, String title, String? content, DateTime createdAt, DateTime? updatedAt, bool isHidden
+ int? id, String title, String? content, DateTime createdAt, DateTime? updatedAt, bool isHidden, bool isFavorite
 });
 
 
@@ -268,7 +272,7 @@ class __$NoteModelCopyWithImpl<$Res>
 
 /// Create a copy of NoteModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? title = null,Object? content = freezed,Object? createdAt = null,Object? updatedAt = freezed,Object? isHidden = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? title = null,Object? content = freezed,Object? createdAt = null,Object? updatedAt = freezed,Object? isHidden = null,Object? isFavorite = null,}) {
   return _then(_NoteModel(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int?,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
@@ -276,6 +280,7 @@ as String,content: freezed == content ? _self.content : content // ignore: cast_
 as String?,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,updatedAt: freezed == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,isHidden: null == isHidden ? _self.isHidden : isHidden // ignore: cast_nullable_to_non_nullable
+as bool,isFavorite: null == isFavorite ? _self.isFavorite : isFavorite // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
 }

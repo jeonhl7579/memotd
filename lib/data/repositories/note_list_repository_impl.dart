@@ -1,3 +1,4 @@
+import 'package:drift/drift.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:memotd/core/database/app_database.dart';
 import 'package:memotd/core/providers/app_database_provider.dart';
@@ -15,16 +16,13 @@ class NoteListRepositoryImpl implements NoteListRepository {
   final AppDatabase _db;
 
   @override
-  Future<List<NoteModel>> getNotes() async {
-    final rows = await _db.select(_db.notes).get();
-    return rows.map((r) => r.toModel()).toList();
-  }
-
-  @override
-  Future<List<NoteModel>> getFavoriteNotes() async {
-    final rows = await (_db.select(
-      _db.notes,
-    )..where((t) => t.isFavorite.equals(true))).get();
-    return rows.map((r) => r.toModel()).toList();
+  Stream<List<NoteModel>> watchNotes({bool isFavorite = false}) {
+    return (_db.select(_db.notes)
+          ..where((t) => t.isHidden.equals(false)) // ← false로 수정
+          ..orderBy([
+            (t) => OrderingTerm.desc(t.updatedAt), // 최신 수정순 기본
+          ]))
+        .watch()
+        .map((rows) => rows.map((r) => r.toModel()).toList());
   }
 }

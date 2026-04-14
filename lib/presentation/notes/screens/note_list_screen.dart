@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:memotd/domain/models/note_model.dart';
+import 'package:memotd/presentation/notes/providers/note_list/note_list_provider.dart';
 import 'package:memotd/presentation/notes/widgets/note_grid_view_item.dart';
 import 'package:memotd/presentation/notes/widgets/search_field.dart';
 import 'package:memotd/presentation/notes/widgets/tag_selected_field.dart';
@@ -14,9 +16,40 @@ class NoteListScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final filteredNoteList = ref.watch(filteredNoteListProvider);
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
 
+    return filteredNoteList.when(
+      skipLoadingOnReload: true,
+      data: (notes) {
+        if (notes.isEmpty) {
+          return const _EmptyNoteState();
+        }
+        return _NoteListScreen(notes: notes, theme: theme, cs: cs);
+      },
+      error: (error, stackTrace) {
+        return const Scaffold(body: Center(child: Text('Error')));
+      },
+      loading: () =>
+          const Scaffold(body: Center(child: CircularProgressIndicator())),
+    );
+  }
+}
+
+class _NoteListScreen extends StatelessWidget {
+  final List<NoteModel> notes;
+  final ThemeData theme;
+  final ColorScheme cs;
+  const _NoteListScreen({
+    super.key,
+    required this.notes,
+    required this.theme,
+    required this.cs,
+  });
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: cs.surface,
       appBar: AppBar(title: Text('메모', style: theme.textTheme.headlineSmall)),

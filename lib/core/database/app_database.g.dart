@@ -89,6 +89,21 @@ class $NotesTable extends Notes with TableInfo<$NotesTable, Note> {
     ),
     defaultValue: const Constant(false),
   );
+  static const VerificationMeta _isHiddenMeta = const VerificationMeta(
+    'isHidden',
+  );
+  @override
+  late final GeneratedColumn<bool> isHidden = GeneratedColumn<bool>(
+    'is_hidden',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_hidden" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -98,6 +113,7 @@ class $NotesTable extends Notes with TableInfo<$NotesTable, Note> {
     createdAt,
     updatedAt,
     isFavorite,
+    isHidden,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -154,6 +170,12 @@ class $NotesTable extends Notes with TableInfo<$NotesTable, Note> {
         isFavorite.isAcceptableOrUnknown(data['is_favorite']!, _isFavoriteMeta),
       );
     }
+    if (data.containsKey('is_hidden')) {
+      context.handle(
+        _isHiddenMeta,
+        isHidden.isAcceptableOrUnknown(data['is_hidden']!, _isHiddenMeta),
+      );
+    }
     return context;
   }
 
@@ -191,6 +213,10 @@ class $NotesTable extends Notes with TableInfo<$NotesTable, Note> {
         DriftSqlType.bool,
         data['${effectivePrefix}is_favorite'],
       )!,
+      isHidden: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_hidden'],
+      )!,
     );
   }
 
@@ -208,6 +234,7 @@ class Note extends DataClass implements Insertable<Note> {
   final DateTime createdAt;
   final DateTime? updatedAt;
   final bool isFavorite;
+  final bool isHidden;
   const Note({
     required this.id,
     required this.title,
@@ -216,6 +243,7 @@ class Note extends DataClass implements Insertable<Note> {
     required this.createdAt,
     this.updatedAt,
     required this.isFavorite,
+    required this.isHidden,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -233,6 +261,7 @@ class Note extends DataClass implements Insertable<Note> {
       map['updated_at'] = Variable<DateTime>(updatedAt);
     }
     map['is_favorite'] = Variable<bool>(isFavorite);
+    map['is_hidden'] = Variable<bool>(isHidden);
     return map;
   }
 
@@ -251,6 +280,7 @@ class Note extends DataClass implements Insertable<Note> {
           ? const Value.absent()
           : Value(updatedAt),
       isFavorite: Value(isFavorite),
+      isHidden: Value(isHidden),
     );
   }
 
@@ -267,6 +297,7 @@ class Note extends DataClass implements Insertable<Note> {
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime?>(json['updatedAt']),
       isFavorite: serializer.fromJson<bool>(json['isFavorite']),
+      isHidden: serializer.fromJson<bool>(json['isHidden']),
     );
   }
   @override
@@ -280,6 +311,7 @@ class Note extends DataClass implements Insertable<Note> {
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'updatedAt': serializer.toJson<DateTime?>(updatedAt),
       'isFavorite': serializer.toJson<bool>(isFavorite),
+      'isHidden': serializer.toJson<bool>(isHidden),
     };
   }
 
@@ -291,6 +323,7 @@ class Note extends DataClass implements Insertable<Note> {
     DateTime? createdAt,
     Value<DateTime?> updatedAt = const Value.absent(),
     bool? isFavorite,
+    bool? isHidden,
   }) => Note(
     id: id ?? this.id,
     title: title ?? this.title,
@@ -299,6 +332,7 @@ class Note extends DataClass implements Insertable<Note> {
     createdAt: createdAt ?? this.createdAt,
     updatedAt: updatedAt.present ? updatedAt.value : this.updatedAt,
     isFavorite: isFavorite ?? this.isFavorite,
+    isHidden: isHidden ?? this.isHidden,
   );
   Note copyWithCompanion(NotesCompanion data) {
     return Note(
@@ -311,6 +345,7 @@ class Note extends DataClass implements Insertable<Note> {
       isFavorite: data.isFavorite.present
           ? data.isFavorite.value
           : this.isFavorite,
+      isHidden: data.isHidden.present ? data.isHidden.value : this.isHidden,
     );
   }
 
@@ -323,7 +358,8 @@ class Note extends DataClass implements Insertable<Note> {
           ..write('imgPath: $imgPath, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
-          ..write('isFavorite: $isFavorite')
+          ..write('isFavorite: $isFavorite, ')
+          ..write('isHidden: $isHidden')
           ..write(')'))
         .toString();
   }
@@ -337,6 +373,7 @@ class Note extends DataClass implements Insertable<Note> {
     createdAt,
     updatedAt,
     isFavorite,
+    isHidden,
   );
   @override
   bool operator ==(Object other) =>
@@ -348,7 +385,8 @@ class Note extends DataClass implements Insertable<Note> {
           other.imgPath == this.imgPath &&
           other.createdAt == this.createdAt &&
           other.updatedAt == this.updatedAt &&
-          other.isFavorite == this.isFavorite);
+          other.isFavorite == this.isFavorite &&
+          other.isHidden == this.isHidden);
 }
 
 class NotesCompanion extends UpdateCompanion<Note> {
@@ -359,6 +397,7 @@ class NotesCompanion extends UpdateCompanion<Note> {
   final Value<DateTime> createdAt;
   final Value<DateTime?> updatedAt;
   final Value<bool> isFavorite;
+  final Value<bool> isHidden;
   const NotesCompanion({
     this.id = const Value.absent(),
     this.title = const Value.absent(),
@@ -367,6 +406,7 @@ class NotesCompanion extends UpdateCompanion<Note> {
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.isFavorite = const Value.absent(),
+    this.isHidden = const Value.absent(),
   });
   NotesCompanion.insert({
     this.id = const Value.absent(),
@@ -376,6 +416,7 @@ class NotesCompanion extends UpdateCompanion<Note> {
     required DateTime createdAt,
     this.updatedAt = const Value.absent(),
     this.isFavorite = const Value.absent(),
+    this.isHidden = const Value.absent(),
   }) : title = Value(title),
        createdAt = Value(createdAt);
   static Insertable<Note> custom({
@@ -386,6 +427,7 @@ class NotesCompanion extends UpdateCompanion<Note> {
     Expression<DateTime>? createdAt,
     Expression<DateTime>? updatedAt,
     Expression<bool>? isFavorite,
+    Expression<bool>? isHidden,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -395,6 +437,7 @@ class NotesCompanion extends UpdateCompanion<Note> {
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
       if (isFavorite != null) 'is_favorite': isFavorite,
+      if (isHidden != null) 'is_hidden': isHidden,
     });
   }
 
@@ -406,6 +449,7 @@ class NotesCompanion extends UpdateCompanion<Note> {
     Value<DateTime>? createdAt,
     Value<DateTime?>? updatedAt,
     Value<bool>? isFavorite,
+    Value<bool>? isHidden,
   }) {
     return NotesCompanion(
       id: id ?? this.id,
@@ -415,6 +459,7 @@ class NotesCompanion extends UpdateCompanion<Note> {
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       isFavorite: isFavorite ?? this.isFavorite,
+      isHidden: isHidden ?? this.isHidden,
     );
   }
 
@@ -442,6 +487,9 @@ class NotesCompanion extends UpdateCompanion<Note> {
     if (isFavorite.present) {
       map['is_favorite'] = Variable<bool>(isFavorite.value);
     }
+    if (isHidden.present) {
+      map['is_hidden'] = Variable<bool>(isHidden.value);
+    }
     return map;
   }
 
@@ -454,7 +502,8 @@ class NotesCompanion extends UpdateCompanion<Note> {
           ..write('imgPath: $imgPath, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
-          ..write('isFavorite: $isFavorite')
+          ..write('isFavorite: $isFavorite, ')
+          ..write('isHidden: $isHidden')
           ..write(')'))
         .toString();
   }
@@ -897,6 +946,7 @@ typedef $$NotesTableCreateCompanionBuilder =
       required DateTime createdAt,
       Value<DateTime?> updatedAt,
       Value<bool> isFavorite,
+      Value<bool> isHidden,
     });
 typedef $$NotesTableUpdateCompanionBuilder =
     NotesCompanion Function({
@@ -907,6 +957,7 @@ typedef $$NotesTableUpdateCompanionBuilder =
       Value<DateTime> createdAt,
       Value<DateTime?> updatedAt,
       Value<bool> isFavorite,
+      Value<bool> isHidden,
     });
 
 final class $$NotesTableReferences
@@ -973,6 +1024,11 @@ class $$NotesTableFilterComposer extends Composer<_$AppDatabase, $NotesTable> {
 
   ColumnFilters<bool> get isFavorite => $composableBuilder(
     column: $table.isFavorite,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isHidden => $composableBuilder(
+    column: $table.isHidden,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -1045,6 +1101,11 @@ class $$NotesTableOrderingComposer
     column: $table.isFavorite,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<bool> get isHidden => $composableBuilder(
+    column: $table.isHidden,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$NotesTableAnnotationComposer
@@ -1078,6 +1139,9 @@ class $$NotesTableAnnotationComposer
     column: $table.isFavorite,
     builder: (column) => column,
   );
+
+  GeneratedColumn<bool> get isHidden =>
+      $composableBuilder(column: $table.isHidden, builder: (column) => column);
 
   Expression<T> noteTagsRefs<T extends Object>(
     Expression<T> Function($$NoteTagsTableAnnotationComposer a) f,
@@ -1140,6 +1204,7 @@ class $$NotesTableTableManager
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime?> updatedAt = const Value.absent(),
                 Value<bool> isFavorite = const Value.absent(),
+                Value<bool> isHidden = const Value.absent(),
               }) => NotesCompanion(
                 id: id,
                 title: title,
@@ -1148,6 +1213,7 @@ class $$NotesTableTableManager
                 createdAt: createdAt,
                 updatedAt: updatedAt,
                 isFavorite: isFavorite,
+                isHidden: isHidden,
               ),
           createCompanionCallback:
               ({
@@ -1158,6 +1224,7 @@ class $$NotesTableTableManager
                 required DateTime createdAt,
                 Value<DateTime?> updatedAt = const Value.absent(),
                 Value<bool> isFavorite = const Value.absent(),
+                Value<bool> isHidden = const Value.absent(),
               }) => NotesCompanion.insert(
                 id: id,
                 title: title,
@@ -1166,6 +1233,7 @@ class $$NotesTableTableManager
                 createdAt: createdAt,
                 updatedAt: updatedAt,
                 isFavorite: isFavorite,
+                isHidden: isHidden,
               ),
           withReferenceMapper: (p0) => p0
               .map(

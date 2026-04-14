@@ -1,9 +1,20 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:memotd/core/database/app_database.dart';
+import 'package:path/path.dart' as p;
+import 'package:path_provider/path_provider.dart';
 import 'core/router/app_router.dart';
 import 'theme/app_theme.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  // final dbFolder = await getApplicationDocumentsDirectory();
+  // final file = File(p.join(dbFolder.path, 'app.db'));
+  // if (await file.exists()) {
+  //   await file.delete();
+  // }
   runApp(const ProviderScope(child: MemotdApp()));
 }
 

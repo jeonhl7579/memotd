@@ -8,4 +8,5 @@ class Notes extends Table {
   DateTimeColumn get createdAt => dateTime()();
   DateTimeColumn get updatedAt => dateTime().nullable()();
   BoolColumn get isFavorite => boolean().withDefault(const Constant(false))();
+  BoolColumn get isHidden => boolean().withDefault(const Constant(false))();
 }

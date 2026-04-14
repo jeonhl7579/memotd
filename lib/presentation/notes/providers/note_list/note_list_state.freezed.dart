@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$NoteListState {
 
- String? get searchQuery; NoteListFilter get filter; List<NoteModel> get noteList;
+ String? get searchQuery; NoteListFilter get filter;
 /// Create a copy of NoteListState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $NoteListStateCopyWith<NoteListState> get copyWith => _$NoteListStateCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is NoteListState&&(identical(other.searchQuery, searchQuery) || other.searchQuery == searchQuery)&&(identical(other.filter, filter) || other.filter == filter)&&const DeepCollectionEquality().equals(other.noteList, noteList));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is NoteListState&&(identical(other.searchQuery, searchQuery) || other.searchQuery == searchQuery)&&(identical(other.filter, filter) || other.filter == filter));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,searchQuery,filter,const DeepCollectionEquality().hash(noteList));
+int get hashCode => Object.hash(runtimeType,searchQuery,filter);
 
 @override
 String toString() {
-  return 'NoteListState(searchQuery: $searchQuery, filter: $filter, noteList: $noteList)';
+  return 'NoteListState(searchQuery: $searchQuery, filter: $filter)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $NoteListStateCopyWith<$Res>  {
   factory $NoteListStateCopyWith(NoteListState value, $Res Function(NoteListState) _then) = _$NoteListStateCopyWithImpl;
 @useResult
 $Res call({
- String? searchQuery, NoteListFilter filter, List<NoteModel> noteList
+ String? searchQuery, NoteListFilter filter
 });
 
 
@@ -62,12 +62,11 @@ class _$NoteListStateCopyWithImpl<$Res>
 
 /// Create a copy of NoteListState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? searchQuery = freezed,Object? filter = null,Object? noteList = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? searchQuery = freezed,Object? filter = null,}) {
   return _then(_self.copyWith(
 searchQuery: freezed == searchQuery ? _self.searchQuery : searchQuery // ignore: cast_nullable_to_non_nullable
 as String?,filter: null == filter ? _self.filter : filter // ignore: cast_nullable_to_non_nullable
-as NoteListFilter,noteList: null == noteList ? _self.noteList : noteList // ignore: cast_nullable_to_non_nullable
-as List<NoteModel>,
+as NoteListFilter,
   ));
 }
 
@@ -152,10 +151,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? searchQuery,  NoteListFilter filter,  List<NoteModel> noteList)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? searchQuery,  NoteListFilter filter)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _NoteListState() when $default != null:
-return $default(_that.searchQuery,_that.filter,_that.noteList);case _:
+return $default(_that.searchQuery,_that.filter);case _:
   return orElse();
 
 }
@@ -173,10 +172,10 @@ return $default(_that.searchQuery,_that.filter,_that.noteList);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? searchQuery,  NoteListFilter filter,  List<NoteModel> noteList)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? searchQuery,  NoteListFilter filter)  $default,) {final _that = this;
 switch (_that) {
 case _NoteListState():
-return $default(_that.searchQuery,_that.filter,_that.noteList);case _:
+return $default(_that.searchQuery,_that.filter);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -193,10 +192,10 @@ return $default(_that.searchQuery,_that.filter,_that.noteList);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? searchQuery,  NoteListFilter filter,  List<NoteModel> noteList)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? searchQuery,  NoteListFilter filter)?  $default,) {final _that = this;
 switch (_that) {
 case _NoteListState() when $default != null:
-return $default(_that.searchQuery,_that.filter,_that.noteList);case _:
+return $default(_that.searchQuery,_that.filter);case _:
   return null;
 
 }
@@ -208,18 +207,11 @@ return $default(_that.searchQuery,_that.filter,_that.noteList);case _:
 
 
 class _NoteListState implements NoteListState {
-  const _NoteListState({this.searchQuery, this.filter = NoteListFilter.all, final  List<NoteModel> noteList = const []}): _noteList = noteList;
+  const _NoteListState({this.searchQuery, this.filter = NoteListFilter.all});
   
 
 @override final  String? searchQuery;
 @override@JsonKey() final  NoteListFilter filter;
- final  List<NoteModel> _noteList;
-@override@JsonKey() List<NoteModel> get noteList {
-  if (_noteList is EqualUnmodifiableListView) return _noteList;
-  // ignore: implicit_dynamic_type
-  return EqualUnmodifiableListView(_noteList);
-}
-
 
 /// Create a copy of NoteListState
 /// with the given fields replaced by the non-null parameter values.
@@ -231,16 +223,16 @@ _$NoteListStateCopyWith<_NoteListState> get copyWith => __$NoteListStateCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _NoteListState&&(identical(other.searchQuery, searchQuery) || other.searchQuery == searchQuery)&&(identical(other.filter, filter) || other.filter == filter)&&const DeepCollectionEquality().equals(other._noteList, _noteList));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _NoteListState&&(identical(other.searchQuery, searchQuery) || other.searchQuery == searchQuery)&&(identical(other.filter, filter) || other.filter == filter));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,searchQuery,filter,const DeepCollectionEquality().hash(_noteList));
+int get hashCode => Object.hash(runtimeType,searchQuery,filter);
 
 @override
 String toString() {
-  return 'NoteListState(searchQuery: $searchQuery, filter: $filter, noteList: $noteList)';
+  return 'NoteListState(searchQuery: $searchQuery, filter: $filter)';
 }
 
 
@@ -251,7 +243,7 @@ abstract mixin class _$NoteListStateCopyWith<$Res> implements $NoteListStateCopy
   factory _$NoteListStateCopyWith(_NoteListState value, $Res Function(_NoteListState) _then) = __$NoteListStateCopyWithImpl;
 @override @useResult
 $Res call({
- String? searchQuery, NoteListFilter filter, List<NoteModel> noteList
+ String? searchQuery, NoteListFilter filter
 });
 
 
@@ -268,12 +260,11 @@ class __$NoteListStateCopyWithImpl<$Res>
 
 /// Create a copy of NoteListState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? searchQuery = freezed,Object? filter = null,Object? noteList = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? searchQuery = freezed,Object? filter = null,}) {
   return _then(_NoteListState(
 searchQuery: freezed == searchQuery ? _self.searchQuery : searchQuery // ignore: cast_nullable_to_non_nullable
 as String?,filter: null == filter ? _self.filter : filter // ignore: cast_nullable_to_non_nullable
-as NoteListFilter,noteList: null == noteList ? _self._noteList : noteList // ignore: cast_nullable_to_non_nullable
-as List<NoteModel>,
+as NoteListFilter,
   ));
 }
 

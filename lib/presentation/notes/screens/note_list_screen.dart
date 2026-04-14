@@ -5,9 +5,9 @@ import 'package:memotd/presentation/notes/widgets/search_field.dart';
 import 'package:memotd/presentation/notes/widgets/tag_selected_field.dart';
 import 'package:memotd/utils/sizes.dart';
 
-final tags = ["#태그1", "#태그2", "#태그3", "#태그4"];
+final tags = ["#전체", "#즐겨찾기"];
 
-final isTagSelectedList = [true, false, false, false];
+final isTagSelectedList = [true, false];
 
 class NoteListScreen extends ConsumerWidget {
   const NoteListScreen({super.key});

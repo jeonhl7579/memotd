@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:memotd/domain/models/tag_model.dart';
 
 part 'note_model.freezed.dart';
 
@@ -12,5 +13,6 @@ abstract class NoteModel with _$NoteModel {
     DateTime? updatedAt,
     @Default(false) bool isHidden, // 숨김 속성 추가
     @Default(false) bool isFavorite,
+    List<TagModel>? tags,
   }) = _NoteModel;
 }

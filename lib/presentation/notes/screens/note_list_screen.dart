@@ -73,7 +73,19 @@ class _NoteListScreen extends StatelessWidget {
                 cs: cs,
               ),
               Gaps.v16,
-              NoteGridViewItem(color: cs.onPrimary),
+              Expanded(
+                child: GridView.builder(
+                  gridDelegate: gridDelegate,
+                  itemBuilder: (context, index) {
+                    return NoteGridViewItem(
+                      note: notes[index],
+                      color: cs.onPrimary,
+                    );
+                  },
+                  itemCount: notes.length,
+                ),
+              ),
+              // NoteGridViewItem(color: cs.onPrimary),
             ],
           ),
         ),
@@ -90,36 +102,54 @@ class _EmptyNoteState extends ConsumerWidget {
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
 
-    return Column(
-      // mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Container(
-          width: 80,
-          height: 80,
-          decoration: BoxDecoration(
-            color: cs.surfaceContainerLow,
-            borderRadius: BorderRadius.circular(24),
-          ),
-          child: Icon(
-            Icons.sticky_note_2_outlined,
-            size: 36,
-            color: cs.onSurfaceVariant,
+    return Scaffold(
+      backgroundColor: cs.surface,
+      appBar: AppBar(title: Text('메모', style: theme.textTheme.headlineSmall)),
+      body: SafeArea(
+        child: FractionallySizedBox(
+          widthFactor: 1,
+          child: Column(
+            // mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                width: 80,
+                height: 80,
+                decoration: BoxDecoration(
+                  color: cs.surfaceContainerLow,
+                  borderRadius: BorderRadius.circular(24),
+                ),
+                child: Icon(
+                  Icons.sticky_note_2_outlined,
+                  size: 36,
+                  color: cs.onSurfaceVariant,
+                ),
+              ),
+              const SizedBox(height: 20),
+              Text(
+                '아직 메모가 없어요',
+                style: theme.textTheme.titleMedium?.copyWith(
+                  color: cs.onSurface,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                '+ 버튼을 눌러 첫 메모를 작성해 보세요',
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: cs.onSurfaceVariant,
+                ),
+              ),
+            ],
           ),
         ),
-        const SizedBox(height: 20),
-        Text(
-          '아직 메모가 없어요',
-          style: theme.textTheme.titleMedium?.copyWith(color: cs.onSurface),
-        ),
-        const SizedBox(height: 8),
-        Text(
-          '+ 버튼을 눌러 첫 메모를 작성해 보세요',
-          style: theme.textTheme.bodyMedium?.copyWith(
-            color: cs.onSurfaceVariant,
-          ),
-        ),
-      ],
+      ),
     );
   }
 }
+
+final gridDelegate = SliverGridDelegateWithFixedCrossAxisCount(
+  crossAxisCount: 2,
+  childAspectRatio: 171 / 208,
+  mainAxisSpacing: 16,
+  crossAxisSpacing: 16,
+);

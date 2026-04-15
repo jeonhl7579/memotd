@@ -1,15 +1,23 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_quill/flutter_quill.dart' as quill;
+import 'package:flutter_quill/quill_delta.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:memotd/domain/models/note_model.dart';
 import 'package:memotd/presentation/notes/widgets/small_tag_container.dart';
 import 'package:memotd/theme/app_colors.dart';
+import 'package:memotd/utils/note_date.dart';
 import 'package:memotd/utils/sizes.dart';
 
 class NoteGridViewItem extends StatefulWidget {
+  final NoteModel note;
   final Color color;
   final DateTime? createdAt;
   final DateTime? updatedAt;
   const NoteGridViewItem({
     super.key,
+    required this.note,
     required this.color,
     this.createdAt,
     this.updatedAt,
@@ -23,6 +31,9 @@ class _NoteGridViewItemState extends State<NoteGridViewItem> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final doc = (widget.note.content != null && widget.note.content!.isNotEmpty)
+        ? quill.Document.fromJson(jsonDecode(widget.note.content!))
+        : quill.Document();
 
     return Container(
       width: 171,
@@ -48,7 +59,11 @@ class _NoteGridViewItemState extends State<NoteGridViewItem> {
                 children: [
                   Expanded(
                     child: Text(
-                      "OCT 24",
+                      NoteDate.gridDateFormat(
+                        widget.note.updatedAt == null
+                            ? widget.note.createdAt.toString()
+                            : widget.note.updatedAt.toString(),
+                      ),
                       style: theme.textTheme.labelSmall?.copyWith(
                         color: AppColors.primary,
                       ),
@@ -67,7 +82,7 @@ class _NoteGridViewItemState extends State<NoteGridViewItem> {
               ),
               Gaps.v8,
               Text(
-                "Architectural Principles for Fluid UI",
+                widget.note.title,
                 maxLines: 3,
                 overflow: TextOverflow.ellipsis,
                 style: theme.textTheme.titleLarge?.copyWith(fontSize: 16),
@@ -75,7 +90,7 @@ class _NoteGridViewItemState extends State<NoteGridViewItem> {
               Gaps.v4,
               Expanded(
                 child: Text(
-                  "Exploring the intersection of geometric precision and tactile digital…",
+                  doc.toPlainText(),
                   maxLines: 3,
                   overflow: TextOverflow.ellipsis,
                   style: theme.textTheme.bodySmall?.copyWith(fontSize: 12),
@@ -83,10 +98,11 @@ class _NoteGridViewItemState extends State<NoteGridViewItem> {
               ),
               Gaps.v8,
               // 태그 위치, 하나만 표시
-              SmallTagContainer(
-                tag: "#WORK",
-                color: theme.colorScheme.tertiary,
-              ),
+              if (widget.note.tags != null && widget.note.tags!.isNotEmpty)
+                SmallTagContainer(
+                  tag: "#${widget.note.tags!.first.name}",
+                  color: theme.colorScheme.tertiary,
+                ),
             ],
           ),
         ],

@@ -5,9 +5,12 @@ import 'package:flutter_quill/flutter_quill.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:memotd/domain/models/note_model.dart';
 import 'package:go_router/go_router.dart';
+import 'package:memotd/domain/models/tag_model.dart';
 import 'package:memotd/presentation/notes/widgets/nav_bar/common_item.dart';
 import 'package:memotd/presentation/notes/widgets/nav_bar/delete_item.dart';
 import 'package:memotd/presentation/notes/widgets/nav_bar/favorite_item.dart';
+import 'package:memotd/presentation/notes/widgets/tag_container.dart';
+import 'package:memotd/utils/note_date.dart';
 import 'package:memotd/utils/sizes.dart';
 
 class NoteDetailScreen extends StatefulWidget {
@@ -54,6 +57,14 @@ class _NoteDetailScreenState extends State<NoteDetailScreen> {
             children: [
               Gaps.v16,
               // 태그 영역
+              if (widget.note.tags != null && widget.note.tags!.isNotEmpty)
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    noteDetailTagSection(widget.note.tags ?? [], theme),
+                    Gaps.v16,
+                  ],
+                ),
               // 제목 영역
               Text(
                 widget.note.title,
@@ -62,6 +73,11 @@ class _NoteDetailScreenState extends State<NoteDetailScreen> {
               ),
               Gaps.v16,
               // 날짜 영역
+              noteDetailDateSection(
+                widget.note.updatedAt ?? widget.note.createdAt,
+                theme,
+              ),
+              Gaps.v16,
               QuillEditor(
                 focusNode: FocusNode(),
                 scrollController: ScrollController(),
@@ -180,4 +196,38 @@ class __NoteDetailBottomToolBarState extends State<_NoteDetailBottomToolBar> {
       ),
     );
   }
+}
+
+Widget noteDetailTagSection(List<TagModel> tags, ThemeData theme) {
+  return SizedBox(
+    height: 25,
+    child: ListView.builder(
+      scrollDirection: Axis.horizontal,
+      itemBuilder: (context, index) {
+        return TagContainer(
+          tag: tags[index].name,
+          color: theme.colorScheme.primary,
+        );
+      },
+      itemCount: tags.length,
+    ),
+  );
+}
+
+Widget noteDetailDateSection(DateTime time, ThemeData theme) {
+  return Row(
+    crossAxisAlignment: CrossAxisAlignment.end,
+    children: [
+      FaIcon(
+        FontAwesomeIcons.calendar,
+        size: 14,
+        color: theme.colorScheme.onSurfaceVariant,
+      ),
+      Gaps.h8,
+      Text(
+        NoteDate.detailDateFormat(time),
+        style: theme.textTheme.bodyMedium?.copyWith(height: 1.2),
+      ),
+    ],
+  );
 }

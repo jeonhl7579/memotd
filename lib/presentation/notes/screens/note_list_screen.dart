@@ -55,47 +55,50 @@ class _NoteListScreen extends StatelessWidget {
       backgroundColor: cs.surface,
       appBar: AppBar(title: Text('메모', style: theme.textTheme.headlineSmall)),
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Column(
-            children: [
-              Gaps.v16,
-              NoteSearchField(
-                controller: TextEditingController(),
-                onChanged: (value) {},
-                onSubmitted: (value) {},
-              ),
-              Gaps.v16,
-              // 태그 필드
-              TagSelectedField(
-                tags: tags,
-                isTagSelectedList: isTagSelectedList,
-                onTagSelected: (index) {},
-                cs: cs,
-              ),
-              Gaps.v16,
-              Expanded(
-                child: GridView.builder(
-                  gridDelegate: gridDelegate,
-                  itemBuilder: (context, index) {
-                    return GestureDetector(
-                      onTap: () {
-                        context.push(
-                          '/notes/detail/${notes[index].id}',
-                          extra: notes[index],
-                        );
-                      },
-                      child: NoteGridViewItem(
-                        note: notes[index],
-                        color: cs.onPrimary,
-                      ),
-                    );
-                  },
-                  itemCount: notes.length,
+        child: GestureDetector(
+          onTap: () => FocusScope.of(context).unfocus(),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Column(
+              children: [
+                Gaps.v16,
+                NoteSearchField(
+                  controller: TextEditingController(),
+                  onChanged: (value) {},
+                  onSubmitted: (value) {},
                 ),
-              ),
-              // NoteGridViewItem(color: cs.onPrimary),
-            ],
+                Gaps.v16,
+                // 태그 필드
+                TagSelectedField(
+                  tags: tags,
+                  isTagSelectedList: isTagSelectedList,
+                  onTagSelected: (index) {},
+                  cs: cs,
+                ),
+                Gaps.v16,
+                Expanded(
+                  child: GridView.builder(
+                    gridDelegate: gridDelegate,
+                    itemBuilder: (context, index) {
+                      return GestureDetector(
+                        onTap: () {
+                          context.push(
+                            '/notes/detail/${notes[index].id}',
+                            extra: notes[index],
+                          );
+                        },
+                        child: NoteGridViewItem(
+                          note: notes[index],
+                          color: cs.onPrimary,
+                        ),
+                      );
+                    },
+                    itemCount: notes.length,
+                  ),
+                ),
+                // NoteGridViewItem(color: cs.onPrimary),
+              ],
+            ),
           ),
         ),
       ),

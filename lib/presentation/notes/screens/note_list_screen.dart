@@ -6,6 +6,7 @@ import 'package:memotd/presentation/notes/widgets/note_grid_view_item.dart';
 import 'package:memotd/presentation/notes/widgets/search_field.dart';
 import 'package:memotd/presentation/notes/widgets/tag_selected_field.dart';
 import 'package:memotd/utils/sizes.dart';
+import 'package:go_router/go_router.dart';
 
 final tags = ["#전체", "#즐겨찾기"];
 
@@ -77,9 +78,17 @@ class _NoteListScreen extends StatelessWidget {
                 child: GridView.builder(
                   gridDelegate: gridDelegate,
                   itemBuilder: (context, index) {
-                    return NoteGridViewItem(
-                      note: notes[index],
-                      color: cs.onPrimary,
+                    return GestureDetector(
+                      onTap: () {
+                        context.push(
+                          '/notes/detail/${notes[index].id}',
+                          extra: notes[index],
+                        );
+                      },
+                      child: NoteGridViewItem(
+                        note: notes[index],
+                        color: cs.onPrimary,
+                      ),
                     );
                   },
                   itemCount: notes.length,

@@ -1,0 +1,183 @@
+import 'dart:convert';
+
+import 'package:flutter/material.dart';
+import 'package:flutter_quill/flutter_quill.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:memotd/domain/models/note_model.dart';
+import 'package:go_router/go_router.dart';
+import 'package:memotd/presentation/notes/widgets/nav_bar/common_item.dart';
+import 'package:memotd/presentation/notes/widgets/nav_bar/delete_item.dart';
+import 'package:memotd/presentation/notes/widgets/nav_bar/favorite_item.dart';
+import 'package:memotd/utils/sizes.dart';
+
+class NoteDetailScreen extends StatefulWidget {
+  final NoteModel note;
+  const NoteDetailScreen({super.key, required this.note});
+
+  @override
+  State<NoteDetailScreen> createState() => _NoteDetailScreenState();
+}
+
+class _NoteDetailScreenState extends State<NoteDetailScreen> {
+  late QuillController _controller;
+  @override
+  void initState() {
+    super.initState();
+    _controller = QuillController(
+      document: widget.note.content != null && widget.note.content!.isNotEmpty
+          ? Document.fromJson(jsonDecode(widget.note.content!))
+          : Document(),
+      selection: const TextSelection.collapsed(offset: 0),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final cs = theme.colorScheme;
+    final bottomSpace = MediaQuery.of(context).viewInsets.bottom;
+    return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          onPressed: () {
+            context.pop();
+          },
+          icon: Icon(Icons.arrow_back, size: 24),
+        ),
+      ),
+      backgroundColor: cs.surface,
+      body: SafeArea(
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Gaps.v16,
+              // 태그 영역
+              // 제목 영역
+              Text(
+                widget.note.title,
+                style: theme.textTheme.headlineLarge,
+                overflow: TextOverflow.ellipsis,
+              ),
+              Gaps.v16,
+              // 날짜 영역
+              QuillEditor(
+                focusNode: FocusNode(),
+                scrollController: ScrollController(),
+                controller: _controller,
+                config: QuillEditorConfig(
+                  scrollable: false,
+                  autoFocus: false,
+                  expands: false,
+                  showCursor: false,
+                ),
+              ),
+              Gaps.v80,
+              Gaps.v40,
+            ],
+          ),
+        ),
+      ),
+      bottomNavigationBar: _NoteDetailBottomToolBar(
+        theme: theme,
+        bottomSpace: bottomSpace,
+        isFavorite: widget.note.isFavorite,
+        onEdit: () {},
+        onFavorite: () {},
+        onShare: () {},
+        onDelete: () {},
+      ),
+      resizeToAvoidBottomInset: true,
+    );
+  }
+}
+
+class _NoteDetailBottomToolBar extends StatefulWidget {
+  final ThemeData theme;
+  final double bottomSpace;
+  final bool isFavorite;
+  final VoidCallback onEdit;
+  final VoidCallback onFavorite;
+  final VoidCallback onShare;
+  final VoidCallback onDelete;
+
+  const _NoteDetailBottomToolBar({
+    super.key,
+    required this.theme,
+    required this.bottomSpace,
+    required this.isFavorite,
+    required this.onEdit,
+    required this.onFavorite,
+    required this.onShare,
+    required this.onDelete,
+  });
+
+  @override
+  State<_NoteDetailBottomToolBar> createState() =>
+      __NoteDetailBottomToolBarState();
+}
+
+class __NoteDetailBottomToolBarState extends State<_NoteDetailBottomToolBar> {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 68,
+      margin: EdgeInsets.only(
+        left: Sizes.s24,
+        right: Sizes.s24,
+        bottom: widget.bottomSpace + Sizes.s32,
+      ),
+      padding: EdgeInsets.symmetric(horizontal: Sizes.s32),
+      decoration: BoxDecoration(
+        color: widget.theme.colorScheme.onPrimary,
+        borderRadius: BorderRadius.circular(Sizes.s32),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              NoteNavBarCommonItem(
+                icon: FontAwesomeIcons.pencil,
+                label: '수정',
+                onTap: widget.onEdit,
+                theme: widget.theme,
+              ),
+              Gaps.h40,
+              NoteNavBarFavoriteItem(
+                icon: FontAwesomeIcons.bookmark,
+                isFavorite: widget.isFavorite,
+                label: '즐겨찾기',
+                onTap: widget.onFavorite,
+                theme: widget.theme,
+              ),
+              Gaps.h40,
+              NoteNavBarCommonItem(
+                icon: FontAwesomeIcons.shareNodes,
+                label: '공유',
+                onTap: widget.onShare,
+                theme: widget.theme,
+              ),
+            ],
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: Sizes.s16),
+            child: VerticalDivider(
+              color: widget.theme.colorScheme.onSurface.withValues(alpha: 0.4),
+              thickness: 1,
+              width: 1,
+            ),
+          ),
+          NoteNavBarDeleteItem(
+            icon: FontAwesomeIcons.trashCan,
+            label: '삭제',
+            onTap: widget.onDelete,
+            theme: widget.theme,
+          ),
+        ],
+      ),
+    );
+  }
+}

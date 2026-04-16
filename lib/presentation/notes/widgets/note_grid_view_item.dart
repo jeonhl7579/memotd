@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart' as quill;
-import 'package:flutter_quill/quill_delta.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:memotd/domain/models/note_model.dart';
 import 'package:memotd/presentation/notes/widgets/small_tag_container.dart';

@@ -4,6 +4,7 @@ import 'package:memotd/utils/sizes.dart';
 
 class NoteNavBarFavoriteItem extends StatefulWidget {
   final FaIconData icon;
+  final FaIconData activeIcon;
   final bool isFavorite;
   final String label;
   final VoidCallback onTap;
@@ -12,6 +13,7 @@ class NoteNavBarFavoriteItem extends StatefulWidget {
   const NoteNavBarFavoriteItem({
     super.key,
     required this.icon,
+    required this.activeIcon,
     required this.isFavorite,
     required this.label,
     required this.onTap,
@@ -23,8 +25,6 @@ class NoteNavBarFavoriteItem extends StatefulWidget {
 }
 
 class _NoteNavBarFavoriteItemState extends State<NoteNavBarFavoriteItem> {
-  bool isActive = false;
-
   @override
   Widget build(BuildContext context) {
     final activeColor = widget.theme.colorScheme.primary;
@@ -39,18 +39,18 @@ class _NoteNavBarFavoriteItemState extends State<NoteNavBarFavoriteItem> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           FaIcon(
-            widget.icon,
+            widget.isFavorite ? widget.activeIcon : widget.icon,
             size: 18,
-            color: isActive ? activeColor : inactiveColor,
+            color: widget.isFavorite ? activeColor : inactiveColor,
           ),
           Gaps.v4,
           Text(
             widget.label,
             style: widget.theme.textTheme.labelSmall?.copyWith(
-              color: isActive ? activeColor : inactiveColor,
+              color: widget.isFavorite ? activeColor : inactiveColor,
             ),
           ),
-          if (isActive)
+          if (widget.isFavorite)
             Column(
               mainAxisSize: MainAxisSize.min,
               children: [

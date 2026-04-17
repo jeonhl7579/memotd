@@ -9,12 +9,11 @@ final noteDetailProvider = NotifierProvider.autoDispose
     );
 
 class NoteDetailNotifier extends Notifier<NoteDetailState> {
-  final NoteModel note;
-
-  NoteDetailNotifier(this.note);
+  final NoteModel _note;
+  NoteDetailNotifier(this._note);
 
   @override
-  NoteDetailState build() => NoteDetailState(note: note);
+  NoteDetailState build() => NoteDetailState(note: _note);
 
   Future<void> toggleFavorite() async {
     final note = state.note;

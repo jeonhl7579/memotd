@@ -72,11 +72,17 @@ class _NoteGridViewItemState extends State<NoteGridViewItem> {
                   ),
                   Gaps.h4,
                   // 즐겨찾기 버튼으로 변경할 예정
-                  FaIcon(
-                    FontAwesomeIcons.bookmark,
-                    size: 14,
-                    color: theme.colorScheme.primary,
-                  ),
+                  !widget.note.isFavorite
+                      ? FaIcon(
+                          FontAwesomeIcons.bookmark,
+                          size: 14,
+                          color: theme.colorScheme.primary,
+                        )
+                      : FaIcon(
+                          FontAwesomeIcons.solidBookmark,
+                          size: 14,
+                          color: theme.colorScheme.primary,
+                        ),
                 ],
               ),
               Gaps.v8,

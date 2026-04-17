@@ -173,6 +173,7 @@ class __NoteDetailBottomToolBarState extends State<_NoteDetailBottomToolBar> {
               Gaps.h40,
               NoteNavBarFavoriteItem(
                 icon: FontAwesomeIcons.bookmark,
+                activeIcon: FontAwesomeIcons.solidBookmark,
                 isFavorite: widget.isFavorite,
                 label: '즐겨찾기',
                 onTap: widget.onFavorite,

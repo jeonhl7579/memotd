@@ -1,3 +1,4 @@
+import 'package:drift/drift.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:memotd/core/database/app_database.dart';
 import 'package:memotd/core/providers/app_database_provider.dart';
@@ -54,5 +55,12 @@ class NoteWriteRepositoryImpl implements NoteWriteRepository {
         .select(_db.notes)
         .watch()
         .map((rows) => rows.map((r) => r.toModel()).toList());
+  }
+
+  @override
+  Future<void> toggleFavorite(int id, bool isFavorite) async {
+    await (_db.update(_db.notes)..where((t) => t.id.equals(id))).write(
+      NotesCompanion(isFavorite: Value(isFavorite)),
+    );
   }
 }

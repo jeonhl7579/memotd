@@ -2,10 +2,12 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:memotd/domain/models/note_model.dart';
 import 'package:go_router/go_router.dart';
 import 'package:memotd/domain/models/tag_model.dart';
+import 'package:memotd/presentation/notes/providers/note_detail/note_detail_provider.dart';
 import 'package:memotd/presentation/notes/widgets/nav_bar/common_item.dart';
 import 'package:memotd/presentation/notes/widgets/nav_bar/delete_item.dart';
 import 'package:memotd/presentation/notes/widgets/nav_bar/favorite_item.dart';
@@ -13,16 +15,17 @@ import 'package:memotd/presentation/notes/widgets/tag_container.dart';
 import 'package:memotd/utils/note_date.dart';
 import 'package:memotd/utils/sizes.dart';
 
-class NoteDetailScreen extends StatefulWidget {
+class NoteDetailScreen extends ConsumerStatefulWidget {
   final NoteModel note;
   const NoteDetailScreen({super.key, required this.note});
 
   @override
-  State<NoteDetailScreen> createState() => _NoteDetailScreenState();
+  ConsumerState<NoteDetailScreen> createState() => _NoteDetailScreenState();
 }
 
-class _NoteDetailScreenState extends State<NoteDetailScreen> {
+class _NoteDetailScreenState extends ConsumerState<NoteDetailScreen> {
   late QuillController _controller;
+
   @override
   void initState() {
     super.initState();
@@ -36,9 +39,18 @@ class _NoteDetailScreenState extends State<NoteDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final state = ref.watch(noteDetailProvider(widget.note));
+    final notifier = ref.read(noteDetailProvider(widget.note).notifier);
+
+    ref.listen(noteDetailProvider(widget.note), (_, next) {
+      if (next.isDeleted) context.pop();
+    });
+
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
     final bottomSpace = MediaQuery.of(context).viewInsets.bottom;
+    final note = state.note;
+
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -57,26 +69,23 @@ class _NoteDetailScreenState extends State<NoteDetailScreen> {
             children: [
               Gaps.v16,
               // 태그 영역
-              if (widget.note.tags != null && widget.note.tags!.isNotEmpty)
+              if (note.tags != null && note.tags!.isNotEmpty)
                 Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    noteDetailTagSection(widget.note.tags ?? [], theme),
+                    noteDetailTagSection(note.tags ?? [], theme),
                     Gaps.v16,
                   ],
                 ),
               // 제목 영역
               Text(
-                widget.note.title,
+                note.title,
                 style: theme.textTheme.headlineLarge,
                 overflow: TextOverflow.ellipsis,
               ),
               Gaps.v16,
               // 날짜 영역
-              noteDetailDateSection(
-                widget.note.updatedAt ?? widget.note.createdAt,
-                theme,
-              ),
+              noteDetailDateSection(note.updatedAt ?? note.createdAt, theme),
               Gaps.v16,
               QuillEditor(
                 focusNode: FocusNode(),
@@ -98,11 +107,11 @@ class _NoteDetailScreenState extends State<NoteDetailScreen> {
       bottomNavigationBar: _NoteDetailBottomToolBar(
         theme: theme,
         bottomSpace: bottomSpace,
-        isFavorite: widget.note.isFavorite,
+        isFavorite: state.isFavorite,
         onEdit: () {},
-        onFavorite: () {},
         onShare: () {},
-        onDelete: () {},
+        onFavorite: notifier.toggleFavorite,
+        onDelete: notifier.deleteNote,
       ),
       resizeToAvoidBottomInset: true,
     );

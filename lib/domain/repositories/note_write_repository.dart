@@ -7,4 +7,5 @@ abstract class NoteWriteRepository {
   Future<void> updateNote(NoteModel note);
   Future<void> deleteNote(int id);
   Stream<List<NoteModel>> watchNotes();
+  Future<void> toggleFavorite(int id, bool isFavorite);
 }

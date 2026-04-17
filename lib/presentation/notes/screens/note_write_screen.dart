@@ -44,11 +44,17 @@ class _NoteWriteScreenState extends ConsumerState<NoteWriteScreen> {
 
   void _saveNote() async {
     try {
-      print("저장 시작");
       final result = await ref.read(noteWriteProvider.notifier).saveNote();
-      if (result == null) return;
+      if (result == null) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          context.pop();
+        });
+      }
       // 저장 성공 시 메모 페이지로 이동
-      print("저장 성공: ${result.id}");
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        // 현재 스택 제거 후 다음 페이지로 이동
+        context.pushReplacement('/notes/detail/${result!.id}', extra: result);
+      });
     } catch (e, _) {
       // 저장 시도 중 에러 발생 시 에러 메시지 다이얼로그 표시
       WidgetsBinding.instance.addPostFrameCallback((_) async {

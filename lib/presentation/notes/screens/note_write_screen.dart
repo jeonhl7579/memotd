@@ -1,13 +1,17 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_quill/flutter_quill.dart';
+import 'package:flutter_quill/quill_delta.dart';
 import 'package:go_router/go_router.dart';
 import 'package:memotd/presentation/notes/providers/note_write/note_write_provider.dart';
 import 'package:memotd/presentation/notes/widgets/save_note_button.dart';
 import 'package:memotd/presentation/notes/widgets/tag_added_list_field.dart';
 import 'package:memotd/presentation/notes/widgets/title_text_form_field.dart';
 import 'package:memotd/shared/widgets/app_dialog.dart';
+import 'package:memotd/utils/quill/quil_ime_sync.dart';
+import 'package:memotd/utils/quill/quill_tool_base_button_options.dart';
 import 'package:memotd/utils/sizes.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -20,26 +24,43 @@ class NoteWriteScreen extends ConsumerStatefulWidget {
 }
 
 class _NoteWriteScreenState extends ConsumerState<NoteWriteScreen> {
-  final QuillController _controller = QuillController.basic();
+  QuillController _controller = QuillController.basic();
   final FocusNode _focusNode = FocusNode();
   final ScrollController _scrollController = ScrollController();
   final TextEditingController _titleController = TextEditingController();
+  late QuillImeSync _quillImeSync;
 
   @override
   void initState() {
     super.initState();
+    _initImeSync();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _controller.addListener(() {
-        try {
-          final deltaJson = jsonEncode(
-            _controller.document.toDelta().toJson(),
-          ); // List<dynamic> → String 변환
-          ref.read(noteWriteProvider.notifier).setContent(deltaJson);
-        } catch (e) {
-          // 본문 저장 실패
-        }
-      });
+      _controller.addListener(_onChanged);
     });
+  }
+
+  void _initImeSync() {
+    _quillImeSync = QuillImeSync(
+      controller: _controller,
+      onControllerChanged: (newController) {
+        setState(() {
+          _controller.removeListener(_onChanged);
+          _controller = newController;
+          _initImeSync();
+          _controller.addListener(_onChanged);
+        });
+      },
+    );
+  }
+
+  void _onChanged() {
+    try {
+      _quillImeSync.onDocumentChanged();
+      final deltaJson = jsonEncode(_controller.document.toDelta().toJson());
+      ref.read(noteWriteProvider.notifier).setContent(deltaJson);
+    } catch (e) {
+      // 본문 저장 실패
+    }
   }
 
   void _saveNote() async {
@@ -69,6 +90,15 @@ class _NoteWriteScreenState extends ConsumerState<NoteWriteScreen> {
 
   void _cancelNote() {
     context.pop();
+  }
+
+  @override
+  void dispose() {
+    _controller.removeListener(_onChanged);
+    _focusNode.dispose();
+    _scrollController.dispose();
+    _titleController.dispose();
+    super.dispose();
   }
 
   @override
@@ -124,6 +154,14 @@ class _NoteWriteScreenState extends ConsumerState<NoteWriteScreen> {
                         child: QuillEditor(
                           config: QuillEditorConfig(
                             padding: EdgeInsets.all(24),
+                            enableInteractiveSelection: true,
+                            customShortcuts: {
+                              const SingleActivator(LogicalKeyboardKey.enter):
+                                  EnterListIntent(),
+                            },
+                            customActions: {
+                              EnterListIntent: EnterListAction(_controller),
+                            },
                           ),
                           focusNode: _focusNode,
                           scrollController: _scrollController,
@@ -148,6 +186,46 @@ class _NoteWriteScreenState extends ConsumerState<NoteWriteScreen> {
               ),
             ),
         ],
+      ),
+      bottomNavigationBar: SafeArea(
+        child: SizedBox(
+          width: double.infinity,
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Wrap(
+              spacing: Sizes.s12,
+              alignment: WrapAlignment.center,
+              direction: Axis.horizontal,
+              crossAxisAlignment: WrapCrossAlignment.center,
+              children: [
+                QuillToolbarToggleStyleButton(
+                  attribute: Attribute.bold,
+                  controller: _controller,
+                  baseOptions: QuillToolBaseButtonOptions.base(
+                    iconData: Icons.format_bold,
+                    scheme: cs,
+                  ),
+                ),
+                QuillToolbarToggleStyleButton(
+                  attribute: Attribute.italic,
+                  controller: _controller,
+                  baseOptions: QuillToolBaseButtonOptions.base(
+                    iconData: Icons.format_italic,
+                    scheme: cs,
+                  ),
+                ),
+                QuillToolbarToggleStyleButton(
+                  attribute: Attribute.ul,
+                  controller: _controller,
+                  baseOptions: QuillToolBaseButtonOptions.base(
+                    iconData: Icons.format_list_bulleted,
+                    scheme: cs,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -174,4 +252,38 @@ PreferredSizeWidget noteWriteAppBar(
     ],
     actionsPadding: EdgeInsets.only(right: 24),
   );
+}
+
+class EnterListIntent extends Intent {
+  const EnterListIntent();
+}
+
+// Action 정의
+class EnterListAction extends Action<EnterListIntent> {
+  EnterListAction(this.controller);
+  final QuillController controller;
+
+  @override
+  Object? invoke(EnterListIntent intent) {
+    final selection = controller.selection;
+    final plainText = controller.document.toPlainText();
+    final before = plainText.substring(0, selection.baseOffset);
+    final lastNewline = before.lastIndexOf('\n');
+    final currentLine = before.substring(lastNewline + 1);
+
+    // 현재 줄이 비어있으면 리스트 종료
+    if (currentLine.trim().isEmpty) {
+      controller.formatSelection(Attribute.clone(Attribute.ul, null));
+      return null;
+    }
+
+    // 아니면 기본 엔터 동작
+    controller.replaceText(
+      selection.baseOffset,
+      selection.extentOffset - selection.baseOffset,
+      '\n',
+      TextSelection.collapsed(offset: selection.baseOffset + 1),
+    );
+    return null;
+  }
 }

@@ -31,6 +31,10 @@ class NoteDetailNotifier extends Notifier<NoteDetailState> {
     }
   }
 
+  void updateNote(NoteModel updatedNote) {
+    state = state.copyWith(note: updatedNote);
+  }
+
   Future<void> deleteNote() async {
     final note = state.note;
     if (note.id == null || state.isLoading) return;

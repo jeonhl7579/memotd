@@ -34,6 +34,7 @@ class _NoteNavBarCommonItemState extends State<NoteNavBarCommonItem> {
       onTapUp: (_) => setState(() => isActive = false),
       onTapDown: (_) => setState(() => isActive = true),
       onTapCancel: () => setState(() => isActive = false),
+      onTap: widget.onTap,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.center,

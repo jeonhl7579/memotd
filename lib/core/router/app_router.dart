@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:memotd/domain/models/note_model.dart';
 import 'package:memotd/presentation/notes/screens/note_detail_screen.dart';
+import 'package:memotd/presentation/notes/screens/note_edit_screen.dart';
 import 'package:memotd/presentation/notes/screens/note_write_screen.dart';
 import '../../presentation/notes/screens/note_list_screen.dart';
 import '../../presentation/todos/screens/todo_screen.dart';
@@ -63,6 +64,12 @@ final GoRouter appRouter = GoRouter(
       path: '/notes/detail/:id',
       pageBuilder: (context, state) => NoTransitionPage(
         child: NoteDetailScreen(note: state.extra as NoteModel),
+      ),
+    ),
+    GoRoute(
+      path: '/notes/edit/:id',
+      pageBuilder: (context, state) => NoTransitionPage(
+        child: NoteEditScreen(note: state.extra as NoteModel),
       ),
     ),
   ],

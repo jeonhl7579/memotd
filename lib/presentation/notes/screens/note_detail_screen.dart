@@ -29,12 +29,22 @@ class _NoteDetailScreenState extends ConsumerState<NoteDetailScreen> {
   @override
   void initState() {
     super.initState();
-    _controller = QuillController(
-      document: widget.note.content != null && widget.note.content!.isNotEmpty
-          ? Document.fromJson(jsonDecode(widget.note.content!))
+    _controller = _buildController(widget.note.content);
+  }
+
+  QuillController _buildController(String? content) {
+    return QuillController(
+      document: content != null && content.isNotEmpty
+          ? Document.fromJson(jsonDecode(content))
           : Document(),
       selection: const TextSelection.collapsed(offset: 0),
     );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   @override
@@ -42,8 +52,15 @@ class _NoteDetailScreenState extends ConsumerState<NoteDetailScreen> {
     final state = ref.watch(noteDetailProvider(widget.note));
     final notifier = ref.read(noteDetailProvider(widget.note).notifier);
 
-    ref.listen(noteDetailProvider(widget.note), (_, next) {
+    ref.listen(noteDetailProvider(widget.note), (prev, next) {
       if (next.isDeleted) context.pop();
+      if (prev != null && prev.note.content != next.note.content) {
+        final old = _controller;
+        setState(() {
+          _controller = _buildController(next.note.content);
+        });
+        old.dispose();
+      }
     });
 
     final theme = Theme.of(context);
@@ -108,7 +125,15 @@ class _NoteDetailScreenState extends ConsumerState<NoteDetailScreen> {
         theme: theme,
         bottomSpace: bottomSpace,
         isFavorite: state.isFavorite,
-        onEdit: () {},
+        onEdit: () async {
+          final updatedNote = await context.push<NoteModel>(
+            '/notes/edit/${widget.note.id}',
+            extra: widget.note,
+          );
+          if (updatedNote != null && mounted) {
+            ref.read(noteDetailProvider(widget.note).notifier).updateNote(updatedNote);
+          }
+        },
         onShare: () {},
         onFavorite: notifier.toggleFavorite,
         onDelete: notifier.deleteNote,

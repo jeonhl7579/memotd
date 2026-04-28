@@ -44,11 +44,13 @@ class _QuillToolBarState extends State<QuillToolBar> {
             QuillToolbarIconButton(
               icon: FaIcon(FontAwesomeIcons.font),
               onPressed: () async {
+                final selection = widget.controller.selection;
                 FocusScope.of(context).unfocus();
                 // 폰트 선택 모달 표시
                 await QuillBottomSheet.fontSelect(
                   context,
                   controller: widget.controller,
+                  selection: selection,
                 );
               },
               isSelected: false,

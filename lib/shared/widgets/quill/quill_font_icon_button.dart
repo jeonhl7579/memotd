@@ -4,11 +4,13 @@ import 'package:memotd/theme/app_colors.dart';
 import 'package:memotd/utils/sizes.dart';
 
 class QuillFontIconButton extends StatelessWidget {
+  final bool isSelected;
   final FaIconData icon;
   final String label;
   final VoidCallback onTap;
   const QuillFontIconButton({
     super.key,
+    required this.isSelected,
     required this.icon,
     required this.label,
     required this.onTap,
@@ -30,14 +32,18 @@ class QuillFontIconButton extends StatelessWidget {
               width: Sizes.s48,
               height: Sizes.s48,
               decoration: BoxDecoration(
-                color: AppColors.quillButtonBackground,
+                color: isSelected
+                    ? Theme.of(context).colorScheme.onSurface
+                    : AppColors.quillButtonBackground,
                 borderRadius: BorderRadius.circular(Sizes.s12),
               ),
               child: Center(
                 child: FaIcon(
                   icon,
                   size: Sizes.s16,
-                  color: Theme.of(context).colorScheme.onSurface,
+                  color: isSelected
+                      ? AppColors.quillButtonBackground
+                      : Theme.of(context).colorScheme.onSurface,
                 ),
               ),
             ),

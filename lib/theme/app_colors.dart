@@ -74,4 +74,7 @@ abstract class AppColors {
   static const Color surfaceContainerHighestDark = Color(0xFF33343C);
   static const Color onSurfaceDark = Color(0xFFE3E2EA);
   static const Color onSurfaceVariantDark = Color(0xFFC5C6D6);
+
+  // Quill
+  static const Color quillButtonBackground = Color(0xFFF1F5F9);
 }

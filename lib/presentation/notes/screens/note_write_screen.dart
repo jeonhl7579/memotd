@@ -3,15 +3,14 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_quill/flutter_quill.dart';
-import 'package:flutter_quill/quill_delta.dart';
 import 'package:go_router/go_router.dart';
 import 'package:memotd/presentation/notes/providers/note_write/note_write_provider.dart';
+import 'package:memotd/presentation/notes/widgets/quill/tool_bar.dart';
 import 'package:memotd/presentation/notes/widgets/save_note_button.dart';
 import 'package:memotd/presentation/notes/widgets/tag_added_list_field.dart';
 import 'package:memotd/presentation/notes/widgets/title_text_form_field.dart';
 import 'package:memotd/shared/widgets/app_dialog.dart';
 import 'package:memotd/utils/quill/quil_ime_sync.dart';
-import 'package:memotd/utils/quill/quill_tool_base_button_options.dart';
 import 'package:memotd/utils/sizes.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -170,8 +169,17 @@ class _NoteWriteScreenState extends ConsumerState<NoteWriteScreen> {
                       ),
                     ),
                   ),
+                  Gaps.v80,
                 ],
               ),
+            ),
+          ),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: QuillToolBar(
+              cs: cs,
+              controller: _controller,
+              onPressed: () {},
             ),
           ),
           if (viewModel.asData?.value.isSaving ?? false)
@@ -186,46 +194,6 @@ class _NoteWriteScreenState extends ConsumerState<NoteWriteScreen> {
               ),
             ),
         ],
-      ),
-      bottomNavigationBar: SafeArea(
-        child: SizedBox(
-          width: double.infinity,
-          child: SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Wrap(
-              spacing: Sizes.s12,
-              alignment: WrapAlignment.center,
-              direction: Axis.horizontal,
-              crossAxisAlignment: WrapCrossAlignment.center,
-              children: [
-                QuillToolbarToggleStyleButton(
-                  attribute: Attribute.bold,
-                  controller: _controller,
-                  baseOptions: QuillToolBaseButtonOptions.base(
-                    iconData: Icons.format_bold,
-                    scheme: cs,
-                  ),
-                ),
-                QuillToolbarToggleStyleButton(
-                  attribute: Attribute.italic,
-                  controller: _controller,
-                  baseOptions: QuillToolBaseButtonOptions.base(
-                    iconData: Icons.format_italic,
-                    scheme: cs,
-                  ),
-                ),
-                QuillToolbarToggleStyleButton(
-                  attribute: Attribute.ul,
-                  controller: _controller,
-                  baseOptions: QuillToolBaseButtonOptions.base(
-                    iconData: Icons.format_list_bulleted,
-                    scheme: cs,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
       ),
     );
   }

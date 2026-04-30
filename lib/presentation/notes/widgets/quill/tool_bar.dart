@@ -8,11 +8,13 @@ class QuillToolBar extends StatefulWidget {
   final ColorScheme cs;
   final QuillController controller;
   final void Function() onPressed;
+  final FocusNode focusNode;
   const QuillToolBar({
     super.key,
     required this.cs,
     required this.controller,
     required this.onPressed,
+    required this.focusNode,
   });
 
   @override
@@ -51,6 +53,7 @@ class _QuillToolBarState extends State<QuillToolBar> {
                   context,
                   controller: widget.controller,
                   selection: selection,
+                  focusNode: widget.focusNode,
                 );
               },
               isSelected: false,

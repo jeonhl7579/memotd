@@ -180,6 +180,7 @@ class _NoteWriteScreenState extends ConsumerState<NoteWriteScreen> {
               cs: cs,
               controller: _controller,
               onPressed: () {},
+              focusNode: _focusNode,
             ),
           ),
           if (viewModel.asData?.value.isSaving ?? false)

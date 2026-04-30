@@ -15,6 +15,8 @@ class QuillFontSheetContent extends StatefulWidget {
   final void Function() onItalicTap;
   final void Function() onUnderlineTap;
   final void Function() onStrikeTap;
+  final void Function() onIncreaseSizeTap;
+  final void Function() onDecreaseSizeTap;
 
   const QuillFontSheetContent({
     super.key,
@@ -27,6 +29,8 @@ class QuillFontSheetContent extends StatefulWidget {
     required this.onItalicTap,
     required this.onUnderlineTap,
     required this.onStrikeTap,
+    required this.onIncreaseSizeTap,
+    required this.onDecreaseSizeTap,
   });
 
   @override
@@ -36,6 +40,7 @@ class QuillFontSheetContent extends StatefulWidget {
 class _QuillFontSheetContentState extends State<QuillFontSheetContent> {
   @override
   Widget build(BuildContext context) {
+    final bottomInsets = MediaQuery.of(context).viewInsets.bottom;
     final style = widget.controller.getSelectionStyle();
     final attrs = style.attributes;
     final isTitle = attrs.containsKey(Attribute.h1);
@@ -46,8 +51,13 @@ class _QuillFontSheetContentState extends State<QuillFontSheetContent> {
     final isItalic = attrs.containsKey(Attribute.italic);
     final isUnderline = attrs.containsKey(Attribute.ul);
     final isStrike = attrs.containsKey(Attribute.strikeThrough);
+
     return Container(
       margin: EdgeInsets.symmetric(horizontal: Sizes.s20),
+      padding: EdgeInsets.only(
+        top: Sizes.s20,
+        bottom: bottomInsets + Sizes.s56,
+      ),
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.onPrimary,
         borderRadius: BorderRadius.only(
@@ -89,8 +99,128 @@ class _QuillFontSheetContentState extends State<QuillFontSheetContent> {
             onUnderlineTap: widget.onUnderlineTap,
             onStrikeTap: widget.onStrikeTap,
           ),
+          Gaps.v20,
           // font size section
+          QuillFontSizeLine(
+            controller: widget.controller,
+            onIncrease: widget.onIncreaseSizeTap,
+            onDecrease: widget.onDecreaseSizeTap,
+          ),
         ],
+      ),
+    );
+  }
+}
+
+// Font Size Line
+class QuillFontSizeLine extends StatefulWidget {
+  final QuillController controller;
+  final void Function() onIncrease;
+  final void Function() onDecrease;
+
+  const QuillFontSizeLine({
+    super.key,
+    required this.controller,
+    required this.onIncrease,
+    required this.onDecrease,
+  });
+
+  @override
+  State<QuillFontSizeLine> createState() => _QuillFontSizeLineState();
+}
+
+class _QuillFontSizeLineState extends State<QuillFontSizeLine> {
+  @override
+  initState() {
+    super.initState();
+    widget.controller.addListener(onControllerChanged);
+  }
+
+  @override
+  void dispose() {
+    widget.controller.removeListener(onControllerChanged);
+    super.dispose();
+  }
+
+  void onControllerChanged() {
+    setState(() {});
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final sizeAttr = widget.controller
+        .getSelectionStyle()
+        .attributes[Attribute.size.key];
+
+    // 정수로 표시
+    final currentSize = (sizeAttr?.value as num?)?.toInt() ?? 16;
+
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: Sizes.s16),
+      padding: EdgeInsets.symmetric(
+        horizontal: Sizes.s16 + Sizes.s2,
+        vertical: Sizes.s12,
+      ),
+      decoration: BoxDecoration(
+        color: AppColors.quillButtonBackground,
+        borderRadius: BorderRadius.circular(Sizes.s12),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text("Text Size", style: Theme.of(context).textTheme.labelMedium),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              _StepButton(
+                icon: FontAwesomeIcons.minus,
+                onTap: widget.onDecrease,
+              ),
+              SizedBox(
+                width: Sizes.s40,
+                child: Text(
+                  "$currentSize",
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+              _StepButton(
+                icon: FontAwesomeIcons.plus,
+                onTap: widget.onIncrease,
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _StepButton extends StatelessWidget {
+  final FaIconData icon;
+  final void Function() onTap;
+
+  const _StepButton({required this.icon, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: Sizes.s32,
+        height: Sizes.s32,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(Sizes.s8),
+        ),
+        child: Center(
+          child: FaIcon(
+            icon,
+            size: Sizes.s12,
+            color: Theme.of(context).colorScheme.primary,
+          ),
+        ),
       ),
     );
   }
@@ -125,25 +255,25 @@ class QuillFontTypeScaleLine extends StatelessWidget {
       children: [
         QuillFontIconButton(
           isSelected: isTitle,
-          icon: FontAwesomeIcons.bold,
+          icon: FontAwesomeIcons.t,
           label: "TITLE",
           onTap: onTitleTap,
         ),
         QuillFontIconButton(
           isSelected: isHeading,
-          icon: FontAwesomeIcons.heading,
+          icon: FontAwesomeIcons.h,
           label: "HEADING",
           onTap: onHeadingTap,
         ),
         QuillFontIconButton(
           isSelected: isBody,
-          icon: FontAwesomeIcons.font,
+          icon: FontAwesomeIcons.b,
           label: "BODY",
           onTap: onBodyTap,
         ),
         QuillFontIconButton(
           isSelected: isLabel,
-          icon: FontAwesomeIcons.tag,
+          icon: FontAwesomeIcons.l,
           label: "LABEL",
           onTap: onLabelTap,
         ),

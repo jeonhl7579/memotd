@@ -5,7 +5,6 @@ import 'package:memotd/presentation/notes/screens/note_detail_screen.dart';
 import 'package:memotd/presentation/notes/screens/note_edit_screen.dart';
 import 'package:memotd/presentation/notes/screens/note_write_screen.dart';
 import '../../presentation/notes/screens/note_list_screen.dart';
-import '../../presentation/todos/screens/todo_screen.dart';
 import '../../presentation/mypage/screens/mypage_screen.dart';
 import '../../shared/widgets/main_shell.dart';
 
@@ -32,16 +31,16 @@ final GoRouter appRouter = GoRouter(
           ],
         ),
 
-        // ── ToDo 탭 ───────────────────────────────────────────────────────
-        StatefulShellBranch(
-          routes: [
-            GoRoute(
-              path: '/todos',
-              pageBuilder: (context, state) =>
-                  const NoTransitionPage(child: TodoScreen()),
-            ),
-          ],
-        ),
+        // // ── ToDo 탭 ───────────────────────────────────────────────────────
+        // StatefulShellBranch(
+        //   routes: [
+        //     GoRoute(
+        //       path: '/todos',
+        //       pageBuilder: (context, state) =>
+        //           const NoTransitionPage(child: TodoScreen()),
+        //     ),
+        //   ],
+        // ),
 
         // ── 마이페이지 탭 ─────────────────────────────────────────────────
         StatefulShellBranch(

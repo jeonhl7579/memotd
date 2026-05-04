@@ -166,6 +166,8 @@ class _NoteEditScreenState extends ConsumerState<NoteEditScreen> {
                     ),
                   ),
                 ),
+                Gaps.v80,
+                Gaps.v20,
               ],
             ),
           ),

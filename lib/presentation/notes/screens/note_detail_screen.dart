@@ -78,6 +78,8 @@ class _NoteDetailScreenState extends ConsumerState<NoteDetailScreen> {
         ),
       ),
       backgroundColor: cs.surface,
+      extendBody: false,
+
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 24, vertical: 16),
@@ -104,19 +106,19 @@ class _NoteDetailScreenState extends ConsumerState<NoteDetailScreen> {
               // 날짜 영역
               noteDetailDateSection(note.updatedAt ?? note.createdAt, theme),
               Gaps.v16,
-              QuillEditor(
-                focusNode: FocusNode(),
-                scrollController: ScrollController(),
-                controller: _controller,
-                config: QuillEditorConfig(
-                  scrollable: false,
-                  autoFocus: false,
-                  expands: false,
-                  showCursor: false,
+              Expanded(
+                child: QuillEditor(
+                  focusNode: FocusNode(),
+                  scrollController: ScrollController(),
+                  controller: _controller,
+                  config: QuillEditorConfig(
+                    scrollable: true,
+                    autoFocus: false,
+                    expands: false,
+                    showCursor: false,
+                  ),
                 ),
               ),
-              Gaps.v80,
-              Gaps.v40,
             ],
           ),
         ),
@@ -131,7 +133,9 @@ class _NoteDetailScreenState extends ConsumerState<NoteDetailScreen> {
             extra: widget.note,
           );
           if (updatedNote != null && mounted) {
-            ref.read(noteDetailProvider(widget.note).notifier).updateNote(updatedNote);
+            ref
+                .read(noteDetailProvider(widget.note).notifier)
+                .updateNote(updatedNote);
           }
         },
         onShare: () {},

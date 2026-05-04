@@ -15,8 +15,6 @@ class MainShell extends ConsumerWidget {
     if (index == 0) {
       // 메모 작성 페이지로 이동
       context.push('/notes/write');
-    } else if (index == 1) {
-      // ToDo 추가 페이지로 이동
     } else {
       // 비활성화 상태이므로 동작 없음
     }
@@ -49,8 +47,6 @@ class MainShell extends ConsumerWidget {
   }
 }
 
-// ── Items definition ─────────────────────────────────────────────────────────
-
 class _NavItem {
   const _NavItem({
     required this.label,
@@ -69,19 +65,17 @@ const _navItems = [
     icon: Icons.sticky_note_2_outlined,
     activeIcon: Icons.sticky_note_2,
   ),
-  _NavItem(
-    label: 'ToDo',
-    icon: Icons.check_circle_outline_rounded,
-    activeIcon: Icons.check_circle_rounded,
-  ),
+  // _NavItem(
+  //   label: 'ToDo',
+  //   icon: Icons.check_circle_outline_rounded,
+  //   activeIcon: Icons.check_circle_rounded,
+  // ),
   _NavItem(
     label: '마이페이지',
     icon: Icons.person_outline_rounded,
     activeIcon: Icons.person_rounded,
   ),
 ];
-
-// ── Glassmorphism bottom navigation bar ──────────────────────────────────────
 
 class _GlassNavBar extends ConsumerWidget {
   const _GlassNavBar({required this.currentIndex, required this.onTap});

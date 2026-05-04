@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
@@ -9,8 +8,10 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:memotd/domain/models/note_model.dart';
 import 'package:memotd/presentation/notes/providers/note_edit/note_edit_provider.dart';
+import 'package:memotd/presentation/notes/widgets/quill/tool_bar.dart';
 import 'package:memotd/theme/app_colors.dart';
 import 'package:memotd/utils/note_date.dart';
+import 'package:memotd/utils/quill/quil_ime_sync.dart';
 import 'package:memotd/utils/sizes.dart';
 
 class NoteEditScreen extends ConsumerStatefulWidget {
@@ -22,8 +23,9 @@ class NoteEditScreen extends ConsumerStatefulWidget {
 }
 
 class _NoteEditScreenState extends ConsumerState<NoteEditScreen> {
-  late final QuillController _quillController;
+  late QuillController _quillController;
   late final TextEditingController _titleController;
+  late QuillImeSync _quillImeSync;
   final FocusNode _editorFocusNode = FocusNode();
   final ScrollController _scrollController = ScrollController();
   Timer? _debounceTimer;
@@ -33,9 +35,26 @@ class _NoteEditScreenState extends ConsumerState<NoteEditScreen> {
     super.initState();
     _titleController = TextEditingController(text: widget.note.title);
     _quillController = _buildQuillController();
+    _initImeSync();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _quillController.addListener(_onContentChanged);
     });
+  }
+
+  void _initImeSync() {
+    _quillImeSync = QuillImeSync(
+      controller: _quillController,
+      onControllerChanged: (newController) {
+        setState(() {
+          final oldController = _quillController;
+          oldController.removeListener(_onContentChanged);
+          _quillController = newController;
+          _initImeSync();
+          _quillController.addListener(_onContentChanged);
+          oldController.dispose();
+        });
+      },
+    );
   }
 
   QuillController _buildQuillController() {
@@ -52,6 +71,7 @@ class _NoteEditScreenState extends ConsumerState<NoteEditScreen> {
   }
 
   void _onContentChanged() {
+    _quillImeSync.onDocumentChanged();
     _debounceTimer?.cancel();
     _debounceTimer = Timer(const Duration(seconds: 3), _autoSave);
   }
@@ -97,6 +117,7 @@ class _NoteEditScreenState extends ConsumerState<NoteEditScreen> {
   Widget build(BuildContext context) {
     final state = ref.watch(noteEditProvider(widget.note));
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final cs = Theme.of(context).colorScheme;
 
     return Scaffold(
       backgroundColor: isDark ? AppColors.surfaceDark : AppColors.surface,
@@ -129,6 +150,7 @@ class _NoteEditScreenState extends ConsumerState<NoteEditScreen> {
                         _MetadataRow(note: widget.note),
                         const SizedBox(height: 40),
                         QuillEditor(
+                          key: ObjectKey(_quillController),
                           controller: _quillController,
                           focusNode: _editorFocusNode,
                           scrollController: _scrollController,
@@ -147,11 +169,15 @@ class _NoteEditScreenState extends ConsumerState<NoteEditScreen> {
               ],
             ),
           ),
-          Positioned(
-            bottom: 0,
-            left: 0,
-            right: 0,
-            child: _FormattingToolbar(controller: _quillController),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: QuillToolBar(
+              cs: cs,
+              controller: _quillController,
+              onPressed: () {},
+              focusNode: _editorFocusNode,
+              onAfterSheet: _quillImeSync.forceSync,
+            ),
           ),
         ],
       ),
@@ -382,125 +408,6 @@ class _TagChip extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
-}
-
-// ── Formatting Toolbar ─────────────────────────────────────────────────────────
-
-class _FormattingToolbar extends StatelessWidget {
-  final QuillController controller;
-
-  const _FormattingToolbar({required this.controller});
-
-  @override
-  Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final bottomInset = MediaQuery.of(context).padding.bottom;
-
-    return ClipRRect(
-      borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
-        child: Container(
-          padding: EdgeInsets.fromLTRB(34, 16, 34, 16 + bottomInset),
-          decoration: BoxDecoration(
-            color:
-                (isDark ? AppColors.surfaceContainerHighestDark : Colors.white)
-                    .withValues(alpha: 0.8),
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
-            border: Border(
-              top: BorderSide(color: AppColors.outline.withValues(alpha: 0.15)),
-            ),
-            boxShadow: [
-              BoxShadow(
-                offset: const Offset(0, -12),
-                blurRadius: 32,
-                color: AppColors.shadowTint.withValues(alpha: 0.06),
-              ),
-            ],
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              _ToolbarBtn(
-                icon: Icons.format_bold,
-                onTap: () => controller.formatSelection(Attribute.bold),
-              ),
-              _ToolbarBtn(
-                icon: Icons.format_italic,
-                onTap: () => controller.formatSelection(Attribute.italic),
-              ),
-              _ToolbarBtn(
-                icon: Icons.format_list_bulleted,
-                onTap: () => controller.formatSelection(Attribute.ul),
-              ),
-              _ImageToolbarBtn(),
-              _ToolbarBtn(icon: Icons.link, onTap: () {}),
-              _ToolbarBtn(icon: Icons.more_vert, onTap: () {}),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _ToolbarBtn extends StatelessWidget {
-  final IconData icon;
-  final VoidCallback onTap;
-
-  const _ToolbarBtn({required this.icon, required this.onTap});
-
-  @override
-  Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    return GestureDetector(
-      onTap: onTap,
-      child: SizedBox(
-        width: 25,
-        height: 25,
-        child: Icon(
-          icon,
-          size: 18,
-          color: isDark ? AppColors.onSurfaceDark : AppColors.onSurface,
-        ),
-      ),
-    );
-  }
-}
-
-class _ImageToolbarBtn extends StatelessWidget {
-  const _ImageToolbarBtn();
-
-  @override
-  Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    return Stack(
-      clipBehavior: Clip.none,
-      children: [
-        SizedBox(
-          width: 25,
-          height: 25,
-          child: Icon(
-            Icons.image_outlined,
-            size: 18,
-            color: isDark ? AppColors.onSurfaceDark : AppColors.onSurface,
-          ),
-        ),
-        Positioned(
-          bottom: -2,
-          right: -2,
-          child: Container(
-            width: 5,
-            height: 5,
-            decoration: BoxDecoration(
-              color: AppColors.primaryContainer,
-              shape: BoxShape.circle,
-            ),
-          ),
-        ),
-      ],
     );
   }
 }

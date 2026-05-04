@@ -35,12 +35,14 @@ class QuillImeSync {
           (secondLast['attributes'] as Map)['list'] == 'bullet';
 
       if (isLastPlainNewline && isSecondLastBullet) {
-        _syncIme();
+        forceSync();
       }
     }
   }
 
-  void _syncIme() {
+  /// 외부에서 IME 연결을 강제로 새로 만들도록 트리거.
+  /// 다음 프레임에 현재 delta/selection으로 새 컨트롤러를 만들어 교체한다.
+  void forceSync() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final currentDelta = controller.document.toDelta();
       final currentSelection = controller.selection;

@@ -9,12 +9,15 @@ class QuillToolBar extends StatefulWidget {
   final QuillController controller;
   final void Function() onPressed;
   final FocusNode focusNode;
+  // 폰트 시트가 닫힌 직후 호출. IME 강제 동기화 등 후처리에 사용.
+  final VoidCallback? onAfterSheet;
   const QuillToolBar({
     super.key,
     required this.cs,
     required this.controller,
     required this.onPressed,
     required this.focusNode,
+    this.onAfterSheet,
   });
 
   @override
@@ -47,14 +50,14 @@ class _QuillToolBarState extends State<QuillToolBar> {
               icon: FaIcon(FontAwesomeIcons.font),
               onPressed: () async {
                 final selection = widget.controller.selection;
-                FocusScope.of(context).unfocus();
-                // 폰트 선택 모달 표시
+                // 폰트 선택 모달 표시 (에디터 포커스 유지)
                 await QuillBottomSheet.fontSelect(
                   context,
                   controller: widget.controller,
                   selection: selection,
-                  focusNode: widget.focusNode,
                 );
+                if (!mounted) return;
+                widget.onAfterSheet?.call();
               },
               isSelected: false,
               iconTheme: QuillIconTheme(
@@ -66,23 +69,6 @@ class _QuillToolBarState extends State<QuillToolBar> {
                 ),
               ),
             ),
-
-            // QuillToolbarToggleStyleButton(
-            //   attribute: Attribute.italic,
-            //   controller: widget.controller,
-            //   baseOptions: QuillToolBaseButtonOptions.base(
-            //     iconData: Icons.format_italic,
-            //     scheme: widget.cs,
-            //   ),
-            // ),
-            // QuillToolbarToggleStyleButton(
-            //   attribute: Attribute.ul,
-            //   controller: widget.controller,
-            //   baseOptions: QuillToolBaseButtonOptions.base(
-            //     iconData: Icons.format_list_bulleted,
-            //     scheme: widget.cs,
-            //   ),
-            // ),
             QuillToolbarIconButton(
               icon: FaIcon(FontAwesomeIcons.image),
               onPressed: widget.onPressed,

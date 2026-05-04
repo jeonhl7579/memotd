@@ -43,10 +43,12 @@ class _NoteWriteScreenState extends ConsumerState<NoteWriteScreen> {
       controller: _controller,
       onControllerChanged: (newController) {
         setState(() {
-          _controller.removeListener(_onChanged);
+          final oldController = _controller;
+          oldController.removeListener(_onChanged);
           _controller = newController;
           _initImeSync();
           _controller.addListener(_onChanged);
+          oldController.dispose();
         });
       },
     );
@@ -94,6 +96,7 @@ class _NoteWriteScreenState extends ConsumerState<NoteWriteScreen> {
   @override
   void dispose() {
     _controller.removeListener(_onChanged);
+    _controller.dispose();
     _focusNode.dispose();
     _scrollController.dispose();
     _titleController.dispose();
@@ -151,6 +154,7 @@ class _NoteWriteScreenState extends ConsumerState<NoteWriteScreen> {
                           borderRadius: BorderRadius.circular(24),
                         ),
                         child: QuillEditor(
+                          key: ObjectKey(_controller),
                           config: QuillEditorConfig(
                             padding: EdgeInsets.all(24),
                             enableInteractiveSelection: true,
@@ -181,6 +185,7 @@ class _NoteWriteScreenState extends ConsumerState<NoteWriteScreen> {
               controller: _controller,
               onPressed: () {},
               focusNode: _focusNode,
+              onAfterSheet: _quillImeSync.forceSync,
             ),
           ),
           if (viewModel.asData?.value.isSaving ?? false)

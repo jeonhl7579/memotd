@@ -6,7 +6,6 @@ class QuillBottomSheet {
   static Future<void> fontSelect(
     BuildContext context, {
     required QuillController controller,
-    required FocusNode focusNode,
     required TextSelection selection,
   }) {
     return showModalBottomSheet(
@@ -15,17 +14,15 @@ class QuillBottomSheet {
       backgroundColor: Colors.transparent,
       builder: (sheetContext) {
         void applyFormat(Attribute attribute) {
-          // 1. 포커스 복원
-          focusNode.requestFocus();
-          // 2. selection 복원
-          controller.updateSelection(controller.selection, ChangeSource.local);
-          // 3. 스타일 적용 (커서 위치부터 다음 입력에 적용)
+          // 1. 시트 진입 시점에 캡처한 selection 복원
+          controller.updateSelection(selection, ChangeSource.local);
+          // 2. 스타일 적용 (커서 위치부터 다음 입력에 적용)
           controller.formatSelection(attribute);
-          // 4. 시트 닫기
+          // 3. 시트 닫기
           Navigator.pop(sheetContext);
         }
 
-        void _onIncrease() {
+        void onIncrease() {
           final sizeAttr = controller
               .getSelectionStyle()
               .attributes[Attribute.size.key];
@@ -34,7 +31,7 @@ class QuillBottomSheet {
           controller.formatSelection(Attribute.fromKeyValue('size', next));
         }
 
-        void _onDecrease() {
+        void onDecrease() {
           final sizeAttr = controller
               .getSelectionStyle()
               .attributes[Attribute.size.key];
@@ -53,8 +50,8 @@ class QuillBottomSheet {
           onItalicTap: () => applyFormat(Attribute.italic),
           onUnderlineTap: () => applyFormat(Attribute.ul),
           onStrikeTap: () => applyFormat(Attribute.strikeThrough),
-          onIncreaseSizeTap: _onIncrease,
-          onDecreaseSizeTap: _onDecrease,
+          onIncreaseSizeTap: onIncrease,
+          onDecreaseSizeTap: onDecrease,
         );
       },
     );

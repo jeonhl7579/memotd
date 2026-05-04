@@ -38,6 +38,18 @@ class _NoteEditScreenState extends ConsumerState<NoteEditScreen> {
     _initImeSync();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _quillController.addListener(_onContentChanged);
+      _editorFocusNode.requestFocus();
+      final docLength = _quillController.document.length;
+      final endOffset = (docLength - 1).clamp(0, docLength);
+      _quillController.updateSelection(
+        TextSelection.collapsed(offset: endOffset),
+        ChangeSource.local,
+      );
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (_scrollController.hasClients) {
+          _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+        }
+      });
     });
   }
 
@@ -61,9 +73,11 @@ class _NoteEditScreenState extends ConsumerState<NoteEditScreen> {
     final raw = widget.note.content;
     if (raw != null && raw.isNotEmpty) {
       try {
+        final document = Document.fromJson(jsonDecode(raw));
+        final endOffset = (document.length - 1).clamp(0, document.length);
         return QuillController(
-          document: Document.fromJson(jsonDecode(raw)),
-          selection: const TextSelection.collapsed(offset: 0),
+          document: document,
+          selection: TextSelection.collapsed(offset: endOffset),
         );
       } catch (_) {}
     }
@@ -134,35 +148,34 @@ class _NoteEditScreenState extends ConsumerState<NoteEditScreen> {
                   onBack: () => context.pop(),
                   onDone: _onDone,
                 ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(24, 32, 24, 0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _TitleField(
+                        controller: _titleController,
+                        onChanged: _onTitleChanged,
+                        isDark: isDark,
+                      ),
+                      Gaps.v24,
+                      _MetadataRow(note: widget.note),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 40),
                 Expanded(
-                  child: SingleChildScrollView(
-                    controller: _scrollController,
-                    padding: const EdgeInsets.fromLTRB(24, 32, 24, 128),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        _TitleField(
-                          controller: _titleController,
-                          onChanged: _onTitleChanged,
-                          isDark: isDark,
-                        ),
-                        Gaps.v24,
-                        _MetadataRow(note: widget.note),
-                        const SizedBox(height: 40),
-                        QuillEditor(
-                          key: ObjectKey(_quillController),
-                          controller: _quillController,
-                          focusNode: _editorFocusNode,
-                          scrollController: _scrollController,
-                          config: const QuillEditorConfig(
-                            padding: EdgeInsets.zero,
-                            scrollable: false,
-                            expands: false,
-                            autoFocus: false,
-                          ),
-                        ),
-                        const SizedBox(height: 40),
-                      ],
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 24),
+                    child: QuillEditor(
+                      key: ObjectKey(_quillController),
+                      controller: _quillController,
+                      focusNode: _editorFocusNode,
+                      scrollController: _scrollController,
+                      config: const QuillEditorConfig(
+                        padding: EdgeInsets.only(bottom: 24),
+                        autoFocus: false,
+                      ),
                     ),
                   ),
                 ),
